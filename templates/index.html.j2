@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ profile.full_name }} Resume</title>
+  <link rel="stylesheet" href="resume.css" />
+</head>
+<body>
+  <main class="resume">
+    <header>
+      <h1>{{ profile.full_name }}</h1>
+      <p>
+        {{ profile.contact.email }} | {{ profile.contact.phone }} | {{ profile.contact.location }}
+        {% for link in profile.links %} | <a href="{{ link.url }}">{{ link.url }}</a>{% endfor %}
+      </p>
+    </header>
+
+    <section id="skills" class="resume-section" aria-labelledby="skills-heading">
+      <h2 id="skills-heading">Skills</h2>
+      {% for g in skills.groups %}
+      <section id="{{ g.id }}" class="skills-group">
+        <h3>{{ g.label }}</h3>
+        <p>{{ g["items"] | join(", ") }}</p>
+      </section>
+      {% endfor %}
+    </section>
+
+    <section id="experience" class="resume-section" aria-labelledby="experience-heading">
+      <h2 id="experience-heading">Experience</h2>
+      {% for pos in experience.positions %}
+      <article id="{{ pos.id }}">
+        {% if pos.progression_segments %}
+        <div class="entry-head stack-company company-compact">
+          <div class="entry-title">
+            <h3>{{ pos.title }} — {{ pos.company }} | {{ pos.location }}</h3>
+            <p class="progression-line progression-line--dated">
+              {% for seg in pos.progression_segments %}
+              <span class="prog-seg"><span class="prog-title">{{ seg.title }}</span><span class="prog-dates"> ({{ seg.dates_compact }})</span></span>{% if not loop.last %}<span class="prog-arrow" aria-hidden="true"> → </span>{% endif %}
+              {% endfor %}
+            </p>
+          </div>
+          <span class="entry-date">{{ pos.date_range }}</span>
+        </div>
+        {% else %}
+        <div class="entry-head">
+          <div class="entry-title">
+            <h3>{{ pos.title }} — {{ pos.company }} | {{ pos.location }}</h3>
+          </div>
+          <span class="entry-date">{{ pos.date_range }}</span>
+        </div>
+        {% endif %}
+        <ul>
+          {% for h in pos.highlights %}
+          <li>{{ h.text }}</li>
+          {% endfor %}
+        </ul>
+      </article>
+      {% endfor %}
+    </section>
+
+    <section id="education" class="resume-section" aria-labelledby="education-heading">
+      <h2 id="education-heading">Education</h2>
+      {% for e in education.entries %}
+      <article id="{{ e.id }}" class="school-block">
+        <div class="entry-head">
+          <div class="entry-title">
+            <h3>{{ e.institution }} | {{ e.location }}</h3>
+          </div>
+        </div>
+        {% for d in e.degrees %}
+        <div class="entry-head degree-row">
+          <span class="entry-title">{{ d.credential }}</span>
+          <span class="entry-date">{{ d.date_display }}</span>
+        </div>
+        {% endfor %}
+      </article>
+      {% endfor %}
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,134 @@
+profile:
+  full_name: Robert Kenney
+  contact:
+    email: robert.kenney128@gmail.com
+    phone: (919) 935-3628
+    location: Raleigh, NC
+  links:
+    - label: LinkedIn
+      url: https://linkedin.com/in/robert-kenney/
+
+skills:
+  groups:
+    - id: languages
+      label: Languages
+      items:
+        - Go
+        - Python
+        - SQL
+        - C++
+        - C
+        - Java
+        - JavaScript
+
+    - id: distributed-data
+      label: Distributed Systems / Data Infrastructure
+      items:
+        - Trino
+        - Apache Iceberg
+        - Kubernetes
+        - Google Cloud Platform (GCP)
+
+    - id: infrastructure
+      label: Infrastructure and Tooling
+      items:
+        - Git
+        - Bash scripting
+        - Terraform
+
+experience:
+  positions:
+    - id: pendo-swe
+      title: Software Engineer
+      seniority: mid
+      company: Pendo
+      location: Raleigh, NC
+      employment: full_time
+      start: "2024-06"
+      end: null
+      tenure:
+        - start: "2024-06"
+          end: "2024-08"
+          arrangement: intern
+          title: SWE Intern
+        - start: "2024-08"
+          end: "2025-05"
+          arrangement: contractor
+          title: Associate SWE (Contract)
+        - start: "2025-05"
+          end: "2026-02"
+          arrangement: full_time
+          title: Associate SWE
+
+      highlights:
+        - text: >-
+            Reduced query latency by up to ~20% in production workloads by propagating sort
+            preferences through the query planner, enabling scans to select optimal
+            on-disk sort-order variants
+
+        - text: >-
+            Led benchmarking and migration evaluation for moving proprietary columnar data
+            to Parquet, comparing Trino (Iceberg connector) vs BigQuery on Iceberg-backed
+            datasets; validated performance using production-shaped workloads on GKE
+
+        - text: >-
+            Improved resilience of distributed query execution under load by refactoring
+            coordinator–worker orchestration around a uniform polling model, ensuring
+            consistent parent–child task dependency tracking during partial failures
+
+        - text: >-
+            Reduced annual infrastructure costs by $70K by implementing a read-through cache
+            for a high-traffic entity, significantly lowering repeated backend load
+
+        - text: >-
+            Owned on-call responsibilities across multiple rotations, triaging and resolving
+            customer-impacting production incidents end-to-end with root-cause mitigation
+
+        - text: >-
+            Automated cross-environment subscription migration workflows, replacing a
+            multi-hour manual process with a repeatable and auditable pipeline
+
+    - id: kimley-horn-intern
+      title: Software Developer Intern
+      company: Kimley-Horn
+      location: Raleigh, NC
+      employment: intern
+      start: "2023-05"
+      end: "2023-08"
+      highlights:
+        - text: >-
+            Reduced payload size and improved responsiveness of large-scale data grids by
+            implementing server-side pagination through a reusable query abstraction layer
+
+        - text: >-
+            Eliminated ~40 hours/week of manual processing by automating document intake using
+            Azure AI Document Intelligence for structured data extraction
+
+        - text: >-
+            Replaced a manual Excel-based fleet tracking system with a full-stack workflow,
+            improving operational visibility and enabling distributed team coordination
+
+    - id: direct-supply-intern
+      title: Software Engineer Intern
+      company: Direct Supply
+      location: Durham, NC
+      employment: intern
+      start: "2022-02"
+      end: "2023-03"
+      highlights:
+        - text: >-
+            Built CMS-based product-content segmentation logic to better organize and target
+            content across two high-growth business segments
+
+education:
+  entries:
+    - id: ncsu
+      institution: North Carolina State University
+      location: Raleigh, NC
+      degrees:
+        - credential: Master of Computer Science
+          date: "2025-05"
+        - credential: Bachelor of Science in Computer Science
+          date: "2024-05"
+        - credential: Bachelor of Science in Economics
+          date: "2024-05"
