@@ -1,0 +1,148 @@
+{# Web-only section carousels (Step 2 markup; Step 3 wires behavior). #}
+
+{% macro section_head(heading_id, title, section_id, web) -%}
+<header class="resume-section-head">
+  <h2 id="{{ heading_id }}">{{ title }}</h2>
+  {% if web %}
+  <button
+    type="button"
+    class="resume-web-only resume-section-expand"
+    data-resume-carousel-expand
+    aria-expanded="false"
+    aria-controls="{{ section_id }}-web"
+    aria-label="Show more about {{ title }}"
+  >More</button>
+  {% endif %}
+</header>
+{%- endmacro %}
+
+
+{% macro web_carousel_list(section_id, web) -%}
+{% if web %}
+<div
+  id="{{ section_id }}-web"
+  class="resume-section-web resume-web-only"
+  hidden
+  data-resume-carousel
+  data-section="{{ section_id }}"
+  {% if web.aria_label %}aria-label="{{ web.aria_label | e }}"{% endif %}
+  role="region"
+>
+  <div class="resume-carousel">
+    <div class="resume-carousel-viewport">
+      <div class="resume-carousel-track" role="list">
+        {% for slide in web.slides %}
+        <section
+          id="{{ section_id }}-slide-{{ slide.id }}"
+          role="listitem"
+          class="resume-carousel-slide resume-carousel-slide--list{% if loop.first %} resume-carousel-slide--current{% endif %}"
+          {% if not loop.first %}hidden aria-hidden="true"{% else %}aria-hidden="false"{% endif %}
+          tabindex="-1"
+        >
+          {% if slide.title %}
+          <h3 class="resume-carousel-slide-title">{{ slide.title }}</h3>
+          {% endif %}
+          {% if slide.intro %}
+          <p class="resume-carousel-slide-intro">{{ slide.intro }}</p>
+          {% endif %}
+          <dl class="resume-carousel-deflist">
+            {% for item in slide["items"] %}
+            <dt>{{ item.name }}</dt>
+            <dd>{{ item.description }}</dd>
+            {% endfor %}
+          </dl>
+        </section>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="resume-carousel-toolbar" role="toolbar" aria-label="Carousel controls">
+      <button type="button" class="resume-carousel-prev" aria-label="Previous slide">
+        <span class="resume-carousel-nav-icon" aria-hidden="true">‹</span>
+      </button>
+      <div class="resume-carousel-dots" role="tablist" aria-label="Slides">
+        {% for slide in web.slides %}
+        <button
+          type="button"
+          role="tab"
+          class="resume-carousel-dot{% if loop.first %} resume-carousel-dot--current{% endif %}"
+          tabindex="{% if loop.first %}0{% else %}-1{% endif %}"
+          aria-selected="{{ 'true' if loop.first else 'false' }}"
+          aria-label="Slide {{ loop.index }} of {{ web.slides|length }}"
+          id="{{ section_id }}-tab-{{ slide.id }}"
+          aria-controls="{{ section_id }}-slide-{{ slide.id }}"
+        ></button>
+        {% endfor %}
+      </div>
+      <button type="button" class="resume-carousel-next" aria-label="Next slide">
+        <span class="resume-carousel-nav-icon" aria-hidden="true">›</span>
+      </button>
+    </div>
+    <button type="button" class="resume-carousel-close" data-resume-carousel-close>Back to resume</button>
+  </div>
+</div>
+{% endif %}
+{%- endmacro %}
+
+
+{% macro web_carousel_figure(section_id, web) -%}
+{% if web %}
+<div
+  id="{{ section_id }}-web"
+  class="resume-section-web resume-web-only"
+  hidden
+  data-resume-carousel
+  data-section="{{ section_id }}"
+  {% if web.aria_label %}aria-label="{{ web.aria_label | e }}"{% endif %}
+  role="region"
+>
+  <div class="resume-carousel">
+    <div class="resume-carousel-viewport">
+      <div class="resume-carousel-track" role="list">
+        {% for slide in web.slides %}
+        <section
+          id="{{ section_id }}-slide-{{ slide.id }}"
+          role="listitem"
+          class="resume-carousel-slide resume-carousel-slide--figure{% if loop.first %} resume-carousel-slide--current{% endif %}"
+          {% if not loop.first %}hidden aria-hidden="true"{% else %}aria-hidden="false"{% endif %}
+          tabindex="-1"
+        >
+          {% if slide.title %}
+          <h3 class="resume-carousel-slide-title">{{ slide.title }}</h3>
+          {% endif %}
+          <figure class="resume-carousel-figure">
+            <img src="{{ slide.image | e }}" alt="{{ slide.image_alt | e }}" loading="lazy" decoding="async" />
+          </figure>
+          {% for para in slide.paragraphs %}
+          <p class="resume-carousel-prose">{{ para }}</p>
+          {% endfor %}
+        </section>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="resume-carousel-toolbar" role="toolbar" aria-label="Carousel controls">
+      <button type="button" class="resume-carousel-prev" aria-label="Previous slide">
+        <span class="resume-carousel-nav-icon" aria-hidden="true">‹</span>
+      </button>
+      <div class="resume-carousel-dots" role="tablist" aria-label="Slides">
+        {% for slide in web.slides %}
+        <button
+          type="button"
+          role="tab"
+          class="resume-carousel-dot{% if loop.first %} resume-carousel-dot--current{% endif %}"
+          tabindex="{% if loop.first %}0{% else %}-1{% endif %}"
+          aria-selected="{{ 'true' if loop.first else 'false' }}"
+          aria-label="Slide {{ loop.index }} of {{ web.slides|length }}"
+          id="{{ section_id }}-tab-{{ slide.id }}"
+          aria-controls="{{ section_id }}-slide-{{ slide.id }}"
+        ></button>
+        {% endfor %}
+      </div>
+      <button type="button" class="resume-carousel-next" aria-label="Next slide">
+        <span class="resume-carousel-nav-icon" aria-hidden="true">›</span>
+      </button>
+    </div>
+    <button type="button" class="resume-carousel-close" data-resume-carousel-close>Back to resume</button>
+  </div>
+</div>
+{% endif %}
+{%- endmacro %}

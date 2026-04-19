@@ -1,2 +1,5 @@
 .venv/*
 dist/*
+
+# Local-only notes (not committed)
+.private/

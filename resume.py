@@ -5,7 +5,7 @@ from pathlib import Path
 
 import yaml
 from jinja2 import Environment, FileSystemLoader, select_autoescape
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class Link(BaseModel):
@@ -25,6 +25,65 @@ class Profile(BaseModel):
     links: list[Link]
 
 
+class NamedBulletItem(BaseModel):
+    """One row in a list-with-intro slide (skills / education carousels)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    name: str
+    description: str
+
+
+class SlideListIntro(BaseModel):
+    """Intro copy plus name + description bullets (shared shape for skills & education)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    id: str
+    title: str | None = None
+    intro: str | None = None
+    items: list[NamedBulletItem] = Field(min_length=1)
+
+
+class SlideFigureProse(BaseModel):
+    """Image + paragraph(s) for experience carousel slides."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    id: str
+    title: str | None = None
+    image: str
+    image_alt: str = Field(min_length=1)
+    paragraphs: list[str] = Field(min_length=1)
+
+
+class SkillsWebExtra(BaseModel):
+    """Web-only carousel for the Skills section (print omits)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    slides: list[SlideListIntro] = Field(min_length=1)
+    aria_label: str | None = None
+
+
+class EducationWebExtra(BaseModel):
+    """Web-only carousel for the Education section (print omits)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    slides: list[SlideListIntro] = Field(min_length=1)
+    aria_label: str | None = None
+
+
+class ExperienceWebExtra(BaseModel):
+    """Web-only carousel for the Experience section (print omits)."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    slides: list[SlideFigureProse] = Field(min_length=1)
+    aria_label: str | None = None
+
+
 class SkillGroup(BaseModel):
     id: str
     label: str
@@ -33,6 +92,7 @@ class SkillGroup(BaseModel):
 
 class Skills(BaseModel):
     groups: list[SkillGroup]
+    web: SkillsWebExtra | None = None
 
 
 class Highlight(BaseModel):
@@ -61,6 +121,7 @@ class Position(BaseModel):
 
 class Experience(BaseModel):
     positions: list[Position]
+    web: ExperienceWebExtra | None = None
 
 
 class Degree(BaseModel):
@@ -77,6 +138,7 @@ class EducationEntry(BaseModel):
 
 class Education(BaseModel):
     entries: list[EducationEntry]
+    web: EducationWebExtra | None = None
 
 
 class Resume(BaseModel):
@@ -163,12 +225,33 @@ def normalize(resume: Resume) -> dict:
         for d in e["degrees"]:
             d["date_display"] = fmt_month(d["date"])
         edu_entries.append(e)
+    experience_view = {
+        "positions": positions,
+        "web": resume.experience.web.model_dump() if resume.experience.web else None,
+    }
+    education_view = {
+        "entries": edu_entries,
+        "web": resume.education.web.model_dump() if resume.education.web else None,
+    }
     return {
         "profile": resume.profile.model_dump(),
         "skills": resume.skills.model_dump(),
-        "experience": {"positions": positions},
-        "education": {"entries": edu_entries},
+        "experience": experience_view,
+        "education": education_view,
     }
+
+
+def copy_static_tree(static_root: Path, out_dir: Path) -> None:
+    """Copy all files under static/ (e.g. carousel images) into the output directory."""
+
+    if not static_root.is_dir():
+        return
+    for path in static_root.rglob("*"):
+        if path.is_file():
+            rel = path.relative_to(static_root)
+            dest = out_dir / rel
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(path, dest)
 
 
 def render_html(view: dict, template_dir: Path) -> str:
@@ -195,7 +278,7 @@ def main() -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
     html = render_html(view, root / "templates")
     (out_dir / "index.html").write_text(html)
-    shutil.copy(root / "static" / "resume.css", out_dir / "resume.css")
+    copy_static_tree(root / "static", out_dir)
 
 
 if __name__ == "__main__":

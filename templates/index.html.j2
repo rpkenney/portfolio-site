@@ -7,8 +7,9 @@
   <link rel="stylesheet" href="resume.css" />
 </head>
 <body>
+{% import "macros_carousel.j2" as carousel %}
   <main class="resume">
-    <header>
+    <header class="resume-masthead">
       <h1>{{ profile.full_name }}</h1>
       <p>
         {{ profile.contact.email }} | {{ profile.contact.phone }} | {{ profile.contact.location }}
@@ -17,66 +18,95 @@
     </header>
 
     <section id="skills" class="resume-section" aria-labelledby="skills-heading">
-      <h2 id="skills-heading">Skills</h2>
-      {% for g in skills.groups %}
-      <section id="{{ g.id }}" class="skills-group">
-        <h3>{{ g.label }}</h3>
-        <p>{{ g["items"] | join(", ") }}</p>
-      </section>
-      {% endfor %}
+      {{ carousel.section_head("skills-heading", "Skills", "skills", skills.web) }}
+      {% if skills.web %}
+      <div class="resume-section-body">
+      {% endif %}
+      <div id="skills-default" class="resume-section-default">
+        {% for g in skills.groups %}
+        <section id="{{ g.id }}" class="skills-group">
+          <h3>{{ g.label }}</h3>
+          <p>{{ g["items"] | join(", ") }}</p>
+        </section>
+        {% endfor %}
+      </div>
+      {{ carousel.web_carousel_list("skills", skills.web) }}
+      {% if skills.web %}
+      </div>
+      {% endif %}
     </section>
 
     <section id="experience" class="resume-section" aria-labelledby="experience-heading">
-      <h2 id="experience-heading">Experience</h2>
-      {% for pos in experience.positions %}
-      <article id="{{ pos.id }}">
-        {% if pos.progression_segments %}
-        <div class="entry-head stack-company company-compact">
-          <div class="entry-title">
-            <h3>{{ pos.title }} — {{ pos.company }} | {{ pos.location }}</h3>
-            <p class="progression-line progression-line--dated">
-              {% for seg in pos.progression_segments %}
-              <span class="prog-seg"><span class="prog-title">{{ seg.title }}</span><span class="prog-dates"> ({{ seg.dates_compact }})</span></span>{% if not loop.last %}<span class="prog-arrow" aria-hidden="true"> → </span>{% endif %}
-              {% endfor %}
-            </p>
+      {{ carousel.section_head("experience-heading", "Experience", "experience", experience.web) }}
+      {% if experience.web %}
+      <div class="resume-section-body">
+      {% endif %}
+      <div id="experience-default" class="resume-section-default">
+        {% for pos in experience.positions %}
+        <article id="{{ pos.id }}">
+          {% if pos.progression_segments %}
+          <div class="entry-head entry-head--progression">
+            <div class="entry-title">
+              <h3>{{ pos.title }} — {{ pos.company }} | {{ pos.location }}</h3>
+              <p class="progression-line progression-line--dated">
+                {% for seg in pos.progression_segments %}
+                <span class="prog-seg"><span class="prog-title">{{ seg.title }}</span><span class="prog-dates"> ({{ seg.dates_compact }})</span></span>{% if not loop.last %}<span class="prog-arrow" aria-hidden="true"> → </span>{% endif %}
+                {% endfor %}
+              </p>
+            </div>
+            <span class="entry-date">{{ pos.date_range }}</span>
           </div>
-          <span class="entry-date">{{ pos.date_range }}</span>
-        </div>
-        {% else %}
-        <div class="entry-head">
-          <div class="entry-title">
-            <h3>{{ pos.title }} — {{ pos.company }} | {{ pos.location }}</h3>
+          {% else %}
+          <div class="entry-head">
+            <div class="entry-title">
+              <h3>{{ pos.title }} — {{ pos.company }} | {{ pos.location }}</h3>
+            </div>
+            <span class="entry-date">{{ pos.date_range }}</span>
           </div>
-          <span class="entry-date">{{ pos.date_range }}</span>
-        </div>
-        {% endif %}
-        <ul>
-          {% for h in pos.highlights %}
-          <li>{{ h.text }}</li>
-          {% endfor %}
-        </ul>
-      </article>
-      {% endfor %}
+          {% endif %}
+          <ul>
+            {% for h in pos.highlights %}
+            <li>{{ h.text }}</li>
+            {% endfor %}
+          </ul>
+        </article>
+        {% endfor %}
+      </div>
+      {{ carousel.web_carousel_figure("experience", experience.web) }}
+      {% if experience.web %}
+      </div>
+      {% endif %}
     </section>
 
     <section id="education" class="resume-section" aria-labelledby="education-heading">
-      <h2 id="education-heading">Education</h2>
-      {% for e in education.entries %}
-      <article id="{{ e.id }}" class="school-block">
-        <div class="entry-head">
-          <div class="entry-title">
-            <h3>{{ e.institution }} | {{ e.location }}</h3>
+      {{ carousel.section_head("education-heading", "Education", "education", education.web) }}
+      {% if education.web %}
+      <div class="resume-section-body">
+      {% endif %}
+      <div id="education-default" class="resume-section-default">
+        {% for e in education.entries %}
+        <article id="{{ e.id }}" class="school-block">
+          <div class="entry-head">
+            <div class="entry-title">
+              <h3>{{ e.institution }} | {{ e.location }}</h3>
+            </div>
           </div>
-        </div>
-        {% for d in e.degrees %}
-        <div class="entry-head degree-row">
-          <span class="entry-title">{{ d.credential }}</span>
-          <span class="entry-date">{{ d.date_display }}</span>
-        </div>
+          {% for d in e.degrees %}
+          <div class="entry-head degree-row">
+            <span class="entry-title">{{ d.credential }}</span>
+            <span class="entry-date">{{ d.date_display }}</span>
+          </div>
+          {% endfor %}
+        </article>
         {% endfor %}
-      </article>
-      {% endfor %}
+      </div>
+      {{ carousel.web_carousel_list("education", education.web) }}
+      {% if education.web %}
+      </div>
+      {% endif %}
     </section>
   </main>
+
+  <script src="resume.js" defer></script>
 </body>
 </html>

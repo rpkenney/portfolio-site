@@ -36,6 +36,20 @@ skills:
         - Bash scripting
         - Terraform
 
+  # Web-only carousel (Step 2+); omitted from print. List-with-intro slides.
+  web:
+    aria_label: Skills — additional detail
+    slides:
+      - id: languages-detail
+        title: Languages
+        intro: >-
+          How I use each language in practice, beyond the comma list on the resume.
+        items:
+          - name: Go
+            description: Primary language at work; services, tooling, and performance-sensitive paths.
+          - name: Python
+            description: Scripts, small services, and data exploration outside the core Go stack.
+
 experience:
   positions:
     - id: pendo-swe
@@ -120,6 +134,20 @@ experience:
             Built CMS-based product-content segmentation logic to better organize and target
             content across two high-growth business segments
 
+  # Web-only carousel; figure + prose slides. Paths are relative to the built site root.
+  web:
+    aria_label: Experience — expanded stories
+    slides:
+      - id: pendo-query-work
+        title: Query planning and Iceberg
+        image: experience/pendo-query.png
+        image_alt: >-
+          Simplified view of query planner inputs and sort-order selection discussed in design docs.
+        paragraphs:
+          - >-
+            Additional context on the sort-preference propagation work referenced in the
+            bullets—tradeoffs, rollout, and how we measured latency wins in production.
+
 education:
   entries:
     - id: ncsu
@@ -132,3 +160,19 @@ education:
           date: "2024-05"
         - credential: Bachelor of Science in Economics
           date: "2024-05"
+
+  # Web-only carousel; same list-with-intro shape as skills.
+  web:
+    aria_label: Education — coursework and takeaways
+    slides:
+      - id: ncsu-coursework-sample
+        title: Representative coursework
+        intro: >-
+          Short sample; replace with real classes and takeaways as you flesh this out.
+        items:
+          - name: Distributed systems
+            description: >-
+              Consensus, replication, and fault tolerance; projects in Go and theory exams.
+          - name: Algorithms
+            description: >-
+              Graph algorithms, dynamic programming, and approximation bounds.
