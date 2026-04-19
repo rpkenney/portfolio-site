@@ -412,3 +412,77 @@
     document.documentElement.classList.add("resume-carousel-motion-ok");
   }
 })();
+
+/** §4 — mobile drawer: open/close, focus, Escape (capture so it runs before carousel Escape). */
+(function initSiteNav() {
+  const root = document.querySelector("[data-site-root]");
+  const toggle = document.querySelector("[data-site-nav-toggle]");
+  const drawer = document.querySelector("[data-site-nav-drawer]");
+  const backdrop = document.querySelector("[data-site-nav-backdrop]");
+  if (!root || !toggle || !drawer) return;
+
+  const mqMobile = window.matchMedia("(max-width: 767px)");
+
+  function isDrawerInteractive() {
+    return mqMobile.matches;
+  }
+
+  function open() {
+    if (!isDrawerInteractive()) return;
+    root.classList.add("site--nav-open");
+    toggle.setAttribute("aria-expanded", "true");
+    backdrop?.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+    drawer.querySelector("a[href]")?.focus();
+  }
+
+  function close() {
+    root.classList.remove("site--nav-open");
+    toggle.setAttribute("aria-expanded", "false");
+    backdrop?.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+    if (drawer.contains(document.activeElement)) {
+      toggle.focus();
+    }
+  }
+
+  function isOpen() {
+    return root.classList.contains("site--nav-open");
+  }
+
+  toggle.addEventListener("click", () => {
+    if (!isDrawerInteractive()) return;
+    if (isOpen()) close();
+    else open();
+  });
+
+  backdrop?.addEventListener("click", () => {
+    if (isOpen()) close();
+  });
+
+  drawer.querySelectorAll("a").forEach((a) => {
+    a.addEventListener("click", () => {
+      if (mqMobile.matches) close();
+    });
+  });
+
+  function onMqChange() {
+    if (!mqMobile.matches && isOpen()) close();
+  }
+  if (typeof mqMobile.addEventListener === "function") {
+    mqMobile.addEventListener("change", onMqChange);
+  } else if (typeof mqMobile.addListener === "function") {
+    mqMobile.addListener(onMqChange);
+  }
+
+  document.addEventListener(
+    "keydown",
+    (e) => {
+      if (e.key !== "Escape" || !isOpen()) return;
+      close();
+      e.preventDefault();
+      e.stopPropagation();
+    },
+    true
+  );
+})();

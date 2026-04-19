@@ -1,0 +1,42 @@
+{# §4 Global nav — hrefs are computed in Python for root vs nested pages. #}
+
+{% macro site_nav(nav) -%}
+<nav class="site-nav" aria-label="Site" data-site-nav>
+  <button
+    type="button"
+    class="site-nav-menu-btn resume-web-only"
+    data-site-nav-toggle
+    aria-expanded="false"
+    aria-controls="site-nav-drawer"
+  >
+    <span class="site-nav-menu-icon" aria-hidden="true"></span>
+    <span class="site-nav-menu-label">Menu</span>
+  </button>
+  <div id="site-nav-drawer" class="site-nav-drawer" data-site-nav-drawer>
+    <ul class="site-nav-list">
+      <li>
+        <a
+          href="{{ nav.home_href }}"
+          class="site-nav-link{% if nav.current_page == 'resume' %} site-nav-link--current{% endif %}"
+          {% if nav.current_page == 'resume' %}aria-current="page"{% endif %}
+        >Résumé</a>
+      </li>
+      <li>
+        <a
+          href="{{ nav.portfolio_href }}"
+          class="site-nav-link{% if nav.current_page == 'portfolio' %} site-nav-link--current{% endif %}"
+          {% if nav.current_page == 'portfolio' %}aria-current="page"{% endif %}
+        >Portfolio</a>
+      </li>
+      <li>
+        <a
+          href="{{ nav.writings_href }}"
+          class="site-nav-link{% if nav.current_page == 'writings' %} site-nav-link--current{% endif %}"
+          {% if nav.current_page == 'writings' %}aria-current="page"{% endif %}
+        >Writings</a>
+      </li>
+    </ul>
+  </div>
+</nav>
+<div class="site-nav-backdrop" data-site-nav-backdrop aria-hidden="true"></div>
+{%- endmacro %}

@@ -3,3 +3,5 @@ dist/*
 
 # Local-only notes (not committed)
 .private/
+
+__pycache__/*

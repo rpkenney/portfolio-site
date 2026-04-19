@@ -254,12 +254,40 @@ def copy_static_tree(static_root: Path, out_dir: Path) -> None:
             shutil.copy2(path, dest)
 
 
-def render_html(view: dict, template_dir: Path) -> str:
-    env = Environment(
-        loader=FileSystemLoader(str(template_dir)),
-        autoescape=select_autoescape(["html", "xml"]),
-    )
-    return env.get_template("index.html.j2").render(**view)
+def nav_for_page(page: str) -> dict[str, str]:
+    """§4 — hrefs for flat `index.html` at root and nested `*/index.html` pages."""
+
+    if page == "resume":
+        return {
+            "current_page": "resume",
+            "home_href": "index.html",
+            "portfolio_href": "portfolio/index.html",
+            "writings_href": "writings/index.html",
+        }
+    if page == "portfolio":
+        return {
+            "current_page": "portfolio",
+            "home_href": "../index.html",
+            "portfolio_href": "index.html",
+            "writings_href": "../writings/index.html",
+        }
+    if page == "writings":
+        return {
+            "current_page": "writings",
+            "home_href": "../index.html",
+            "portfolio_href": "../portfolio/index.html",
+            "writings_href": "index.html",
+        }
+    raise ValueError(f"unknown nav page: {page!r}")
+
+
+def asset_hrefs(depth: int) -> tuple[str, str]:
+    prefix = "../" * depth
+    return f"{prefix}resume.css", f"{prefix}resume.js"
+
+
+def render_html(env: Environment, template_name: str, context: dict) -> str:
+    return env.get_template(template_name).render(**context)
 
 
 def main() -> None:
@@ -274,10 +302,56 @@ def main() -> None:
     resume = parse_resume(data)
     view = normalize(resume)
 
+    template_dir = root / "templates"
+    env = Environment(
+        loader=FileSystemLoader(str(template_dir)),
+        autoescape=select_autoescape(["html", "xml"]),
+    )
+
     out_dir = args.output
     out_dir.mkdir(parents=True, exist_ok=True)
-    html = render_html(view, root / "templates")
-    (out_dir / "index.html").write_text(html)
+
+    css0, js0 = asset_hrefs(0)
+    resume_ctx = {
+        **view,
+        "page_title": "Résumé",
+        "nav": nav_for_page("resume"),
+        "css_href": css0,
+        "js_href": js0,
+    }
+    (out_dir / "index.html").write_text(render_html(env, "index.html.j2", resume_ctx))
+
+    css1, js1 = asset_hrefs(1)
+    nested_ctx = {**view, "css_href": css1, "js_href": js1}
+
+    portfolio_dir = out_dir / "portfolio"
+    portfolio_dir.mkdir(parents=True, exist_ok=True)
+    (portfolio_dir / "index.html").write_text(
+        render_html(
+            env,
+            "portfolio.html.j2",
+            {
+                **nested_ctx,
+                "page_title": "Portfolio",
+                "nav": nav_for_page("portfolio"),
+            },
+        )
+    )
+
+    writings_dir = out_dir / "writings"
+    writings_dir.mkdir(parents=True, exist_ok=True)
+    (writings_dir / "index.html").write_text(
+        render_html(
+            env,
+            "writings.html.j2",
+            {
+                **nested_ctx,
+                "page_title": "Writings",
+                "nav": nav_for_page("writings"),
+            },
+        )
+    )
+
     copy_static_tree(root / "static", out_dir)
 
 
