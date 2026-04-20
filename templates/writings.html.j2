@@ -1,13 +1,28 @@
 {% extends "base.html.j2" %}
 {% block main %}
-  <main class="resume site-placeholder">
+  <main class="resume">
     <header class="resume-masthead">
       <h1>Writings</h1>
-      <p class="site-placeholder-lead">Placeholder — articles and notes will live here.</p>
+      <p class="site-placeholder-lead">Sources are listed in <code>writings/index.yaml</code>; each path is built from Markdown in the repo.</p>
     </header>
-    <section class="site-placeholder-section" aria-labelledby="writings-soon-heading">
-      <h2 id="writings-soon-heading">Coming soon</h2>
-      <p>This page is a stub so global navigation and URLs can be wired. Content will ship in a later pass.</p>
+
+    {% if writings_articles %}
+    <section class="writings-list" aria-labelledby="writings-list-heading">
+      <h2 id="writings-list-heading">Articles</h2>
+      <ul class="writings-list-items">
+        {% for a in writings_articles %}
+        <li>
+          <a href="{{ a.href }}">{{ a.title }}</a>
+          <span class="writings-list-path"><code>{{ a.source_path }}</code></span>
+        </li>
+        {% endfor %}
+      </ul>
     </section>
+    {% else %}
+    <section class="site-placeholder-section" aria-labelledby="writings-empty-heading">
+      <h2 id="writings-empty-heading">No writings listed</h2>
+      <p>Add paths under <code>paths:</code> in <code>writings/index.yaml</code> when you have Markdown files ready.</p>
+    </section>
+    {% endif %}
   </main>
 {% endblock %}

@@ -1,13 +1,31 @@
 {% extends "base.html.j2" %}
 {% block main %}
-  <main class="resume site-placeholder">
+  <main class="resume">
     <header class="resume-masthead">
       <h1>Portfolio</h1>
-      <p class="site-placeholder-lead">Placeholder — project gallery and case studies will live here.</p>
+      <p class="site-placeholder-lead">Projects are defined in <code>data/projects.yaml</code>. README embed from GitHub is not wired yet.</p>
     </header>
-    <section class="site-placeholder-section" aria-labelledby="portfolio-soon-heading">
-      <h2 id="portfolio-soon-heading">Coming soon</h2>
-      <p>This page is a stub so global navigation and URLs can be wired. Content will ship in a later pass.</p>
+
+    {% if projects %}
+    <section class="portfolio-projects" aria-labelledby="portfolio-projects-heading">
+      <h2 id="portfolio-projects-heading">Projects</h2>
+      {% for p in projects %}
+      <article id="{{ p.id }}" class="portfolio-project">
+        <h3>{{ p.title }}</h3>
+        <p class="portfolio-project-meta">
+          <a href="{{ p.github_url }}">{{ p.repo }}</a>
+          {% if p.ref %}<span class="portfolio-project-ref"> @ {{ p.ref }}</span>{% endif %}
+          · <span class="portfolio-project-readme">{{ p.readme_display_path }}</span>
+        </p>
+        <p class="portfolio-project-overview">{{ p.overview }}</p>
+      </article>
+      {% endfor %}
     </section>
+    {% else %}
+    <section class="site-placeholder-section" aria-labelledby="portfolio-empty-heading">
+      <h2 id="portfolio-empty-heading">No projects yet</h2>
+      <p>Add entries to <code>data/projects.yaml</code> (or remove the sample row) to list work here.</p>
+    </section>
+    {% endif %}
   </main>
 {% endblock %}

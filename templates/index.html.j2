@@ -10,12 +10,12 @@
       </p>
     </header>
 
-    <section id="skills" class="resume-section" aria-labelledby="skills-heading">
-      {{ carousel.section_head("skills-heading", "Skills", "skills", skills.web) }}
+    <section id="{{ skills.section.id }}" class="resume-section" aria-labelledby="{{ skills.section.heading_id }}">
+      {{ carousel.section_head(skills.section, skills.web) }}
       {% if skills.web %}
       <div class="resume-section-body">
       {% endif %}
-      <div id="skills-default" class="resume-section-default">
+      <div id="{{ skills.section.id }}-default" class="resume-section-default">
         {% for g in skills.groups %}
         <section id="{{ g.id }}" class="skills-group">
           <h3>{{ g.label }}</h3>
@@ -23,18 +23,18 @@
         </section>
         {% endfor %}
       </div>
-      {{ carousel.web_carousel_list("skills", skills.web) }}
+      {{ carousel.web_carousel_list(skills.section, skills.web) }}
       {% if skills.web %}
       </div>
       {% endif %}
     </section>
 
-    <section id="experience" class="resume-section" aria-labelledby="experience-heading">
-      {{ carousel.section_head("experience-heading", "Experience", "experience", experience.web) }}
+    <section id="{{ experience.section.id }}" class="resume-section" aria-labelledby="{{ experience.section.heading_id }}">
+      {{ carousel.section_head(experience.section, experience.web) }}
       {% if experience.web %}
       <div class="resume-section-body">
       {% endif %}
-      <div id="experience-default" class="resume-section-default">
+      <div id="{{ experience.section.id }}-default" class="resume-section-default">
         {% for pos in experience.positions %}
         <article id="{{ pos.id }}">
           {% if pos.progression_segments %}
@@ -65,18 +65,18 @@
         </article>
         {% endfor %}
       </div>
-      {{ carousel.web_carousel_figure("experience", experience.web) }}
+      {{ carousel.web_carousel_figure(experience.section, experience.web) }}
       {% if experience.web %}
       </div>
       {% endif %}
     </section>
 
-    <section id="education" class="resume-section" aria-labelledby="education-heading">
-      {{ carousel.section_head("education-heading", "Education", "education", education.web) }}
+    <section id="{{ education.section.id }}" class="resume-section" aria-labelledby="{{ education.section.heading_id }}">
+      {{ carousel.section_head(education.section, education.web) }}
       {% if education.web %}
       <div class="resume-section-body">
       {% endif %}
-      <div id="education-default" class="resume-section-default">
+      <div id="{{ education.section.id }}-default" class="resume-section-default">
         {% for e in education.entries %}
         <article id="{{ e.id }}" class="school-block">
           <div class="entry-head">
@@ -93,7 +93,7 @@
         </article>
         {% endfor %}
       </div>
-      {{ carousel.web_carousel_list("education", education.web) }}
+      {{ carousel.web_carousel_list(education.section, education.web) }}
       {% if education.web %}
       </div>
       {% endif %}

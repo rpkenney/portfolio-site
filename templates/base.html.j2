@@ -8,7 +8,7 @@
 </head>
 <body>
 {% import "macros_nav.j2" as nav_macro %}
-  <div class="site" data-site-root>
+  <div class="site">
     {{ nav_macro.site_nav(nav) }}
     <div class="site-content">
       {% block main %}{% endblock %}

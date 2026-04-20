@@ -9,6 +9,8 @@ profile:
       url: https://linkedin.com/in/robert-kenney/
 
 skills:
+  section:
+    heading: Skills
   groups:
     - id: languages
       label: Languages
@@ -51,6 +53,8 @@ skills:
             description: Scripts, small services, and data exploration outside the core Go stack.
 
 experience:
+  section:
+    heading: Experience
   positions:
     - id: pendo-swe
       title: Software Engineer
@@ -149,6 +153,8 @@ experience:
             bullets—tradeoffs, rollout, and how we measured latency wins in production.
 
 education:
+  section:
+    heading: Education
   entries:
     - id: ncsu
       institution: North Carolina State University

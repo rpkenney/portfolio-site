@@ -1,7 +1,7 @@
 (function () {
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /** Must match `resume.css` height transition on `.resume-section-body--animating` (open). */
+  /** Must match `site.css` height transition on `.resume-section-body--animating` (open). */
   const OPEN_HEIGHT_MS = 350;
   const VIEWPORT_BOTTOM_MARGIN_PX = 20;
 
@@ -107,23 +107,45 @@
    * expanding bottom edge stays in view — reads like the page moves with the
    * expansion instead of a separate smooth-scroll after the fact.
    */
+  function mainScrollContainer() {
+    return document.querySelector(".site-content");
+  }
+
   function followExpandBottomEdgeDuringHeightTransition(wrapper, durationMs) {
     const start = performance.now();
     const margin = VIEWPORT_BOTTOM_MARGIN_PX;
 
+    function visibleBottomLimit() {
+      const sc = mainScrollContainer();
+      if (sc) {
+        return sc.getBoundingClientRect().bottom - margin;
+      }
+      return window.innerHeight - margin;
+    }
+
+    function scrollByDelta(dy) {
+      if (!dy) return;
+      const sc = mainScrollContainer();
+      if (sc) {
+        sc.scrollBy({ top: dy, left: 0, behavior: "auto" });
+      } else {
+        window.scrollBy({ top: dy, left: 0, behavior: "auto" });
+      }
+    }
+
     function tick(now) {
       const bottom = wrapper.getBoundingClientRect().bottom;
-      const limit = window.innerHeight - margin;
+      const limit = visibleBottomLimit();
       if (bottom > limit) {
-        window.scrollBy({ top: bottom - limit, left: 0, behavior: "auto" });
+        scrollByDelta(bottom - limit);
       }
       if (now - start < durationMs + 80) {
         requestAnimationFrame(tick);
       } else {
         const b = wrapper.getBoundingClientRect().bottom;
-        const lim = window.innerHeight - margin;
+        const lim = visibleBottomLimit();
         if (b > lim) {
-          window.scrollBy({ top: b - lim, left: 0, behavior: "auto" });
+          scrollByDelta(b - lim);
         }
       }
     }
@@ -411,78 +433,4 @@
   if (!reduceMotion) {
     document.documentElement.classList.add("resume-carousel-motion-ok");
   }
-})();
-
-/** §4 — mobile drawer: open/close, focus, Escape (capture so it runs before carousel Escape). */
-(function initSiteNav() {
-  const root = document.querySelector("[data-site-root]");
-  const toggle = document.querySelector("[data-site-nav-toggle]");
-  const drawer = document.querySelector("[data-site-nav-drawer]");
-  const backdrop = document.querySelector("[data-site-nav-backdrop]");
-  if (!root || !toggle || !drawer) return;
-
-  const mqMobile = window.matchMedia("(max-width: 767px)");
-
-  function isDrawerInteractive() {
-    return mqMobile.matches;
-  }
-
-  function open() {
-    if (!isDrawerInteractive()) return;
-    root.classList.add("site--nav-open");
-    toggle.setAttribute("aria-expanded", "true");
-    backdrop?.setAttribute("aria-hidden", "false");
-    document.body.style.overflow = "hidden";
-    drawer.querySelector("a[href]")?.focus();
-  }
-
-  function close() {
-    root.classList.remove("site--nav-open");
-    toggle.setAttribute("aria-expanded", "false");
-    backdrop?.setAttribute("aria-hidden", "true");
-    document.body.style.overflow = "";
-    if (drawer.contains(document.activeElement)) {
-      toggle.focus();
-    }
-  }
-
-  function isOpen() {
-    return root.classList.contains("site--nav-open");
-  }
-
-  toggle.addEventListener("click", () => {
-    if (!isDrawerInteractive()) return;
-    if (isOpen()) close();
-    else open();
-  });
-
-  backdrop?.addEventListener("click", () => {
-    if (isOpen()) close();
-  });
-
-  drawer.querySelectorAll("a").forEach((a) => {
-    a.addEventListener("click", () => {
-      if (mqMobile.matches) close();
-    });
-  });
-
-  function onMqChange() {
-    if (!mqMobile.matches && isOpen()) close();
-  }
-  if (typeof mqMobile.addEventListener === "function") {
-    mqMobile.addEventListener("change", onMqChange);
-  } else if (typeof mqMobile.addListener === "function") {
-    mqMobile.addListener(onMqChange);
-  }
-
-  document.addEventListener(
-    "keydown",
-    (e) => {
-      if (e.key !== "Escape" || !isOpen()) return;
-      close();
-      e.preventDefault();
-      e.stopPropagation();
-    },
-    true
-  );
 })();
