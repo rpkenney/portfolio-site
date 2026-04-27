@@ -19,38 +19,109 @@ skills:
         - Python
         - SQL
         - C++
-        - C
         - Java
         - JavaScript
 
     - id: distributed-data
-      label: Distributed Systems / Data Infrastructure
+      label: Distributed Systems / Infrastructure
       items:
-        - Trino
-        - Apache Iceberg
         - Kubernetes
         - Google Cloud Platform (GCP)
-
-    - id: infrastructure
-      label: Infrastructure and Tooling
-      items:
-        - Git
-        - Bash scripting
+        - BigQuery
+        - Trino, Apache Iceberg, Spark
         - Terraform
 
-  # Web-only carousel (Step 2+); omitted from print. List-with-intro slides.
+    - id: infrastructure
+      label: Tooling
+      items:
+        - Cursor
+        - Claude Code
+        - Git
+
+  # Web-only carousel (Step 2+); omitted from print. One slide per `groups` row.
   web:
-    aria_label: Skills — additional detail
+    aria_label: "Skills: additional detail"
     slides:
       - id: languages-detail
         title: Languages
+        items_layout: table
+        table_first_column_header: Language
+        table_columns:
+          - Experience
+          - Favorite feature
         intro: >-
-          How I use each language in practice, beyond the comma list on the resume.
+          I enjoy learning languages. I prefer a functional style when it fits, but I appreciate
+          OOP and defining interface contracts when a system needs clear boundaries.
         items:
           - name: Go
-            description: Primary language at work; services, tooling, and performance-sensitive paths.
+            table_cells:
+              - Work (primary language)
+              - Implicit interfaces, iter/Seq iterators.
           - name: Python
-            description: Scripts, small services, and data exploration outside the core Go stack.
+            table_cells:
+              - Helper scripts, data wrangling
+              - Fast iteration, good libraries/docs
+          - name: SQL
+            table_cells:
+              - Work
+              - CTEs; grammar is small enough for a clean AST
+          - name: C++
+            table_cells:
+              - Personal projects
+              - Explicit performance and resource control
+          - name: Java
+            table_cells:
+              - Coursework
+              - JVM/JIT, packaging and extensions that compose cleanly
+          - name: JavaScript
+            table_cells:
+              - UI and small tools
+              - Short path from idea to a solid, usable interface
+
+      - id: distributed-data-detail
+        title: Distributed Systems / Data Infrastructure
+        intro: >-
+          I take great interest in understanding how code becomes a running system.
+        items:
+          - name: Kubernetes
+            description: >-
+              Getting workloads running and updated in-cluster, learning the scheduler and
+              resource model, basic scaling strategies, and using kubectl when I need to see what’s
+              going wrong.
+          - name: Google Cloud Platform (GCP)
+            description: >-
+              Most of my GCP time is Pub/Sub, GKE, Datastore, Cloud Storage, and BigQuery:
+              wiring services together, debugging from metrics/logs, and tracing how data flows
+              through the system.
+          - name: Trino, Apache Iceberg, Spark
+            description: >-
+              I like open-source tools in this space; we don’t run these in prod today. I’ve read
+              up on them and benchmarked them against our stack (including Trino on Iceberg versus
+              BigQuery) to compare performance and trade-offs.
+          - name: Terraform
+            description: >-
+              I am comfortable with infra-as-code, making repeatable changes instead of manual clicks.
+
+      - id: infrastructure-detail
+        title: Tooling
+        intro: >-
+          I use these and other tools day-to-day to move quickly and stay organized.
+        items:
+          - name: Claude Code
+            description: >-
+              I use Claude Code for background development: multiple parallel agents to prep work
+              into a reviewable state, then I iterate and refine. Over time I have built a knowledge
+              base of codebase-specific context, style, and workflows, plus notes that serve as a
+              reference for me and for Claude.
+          - name: Cursor
+            description: >-
+              I use Cursor personally and professionally. It is great for quick, high-level
+              investigations and debugging sessions, plus development where I am the
+              primary driver.
+          - name: Git
+            description: >-
+              Git is incredibly powerful, especially when paired with Claude Code and worktrees for
+              parallel changes and clean iteration.
 
 experience:
   section:
@@ -138,19 +209,65 @@ experience:
             Built CMS-based product-content segmentation logic to better organize and target
             content across two high-growth business segments
 
-  # Web-only carousel; figure + prose slides. Paths are relative to the built site root.
   web:
-    aria_label: Experience — expanded stories
+    aria_label: "Experience: expanded stories"
     slides:
-      - id: pendo-query-work
-        title: Query planning and Iceberg
-        image: experience/pendo-query.png
-        image_alt: >-
-          Simplified view of query planner inputs and sort-order selection discussed in design docs.
+      - id: pendo
+        position_id: pendo-swe
+        title: Pendo
+        image: experience/pendo-chevron-pink.png
+        image_alt: Pendo logo
         paragraphs:
           - >-
-            Additional context on the sort-preference propagation work referenced in the
-            bullets—tradeoffs, rollout, and how we measured latency wins in production.
+            Pendo gives software teams product analytics and in-app user guidance.
+          - >-
+            I interned, stayed on as a contractor while I finished my degree, and then joined
+            full time. I work on a platform team focused on our custom internal data warehouse, tuned
+            for how Pendo and our customers use the product. I spend most of my time on that
+            stack in production, from the query and storage path to how we run and operate
+            the services.
+        skills:
+          - Go
+          - Google Cloud Platform
+          - Kubernetes
+          - distributed query planning (joins, grouping)
+          - OLAP columnar storage (Parquet, Pendo internal)
+          - Trino, Iceberg, Spark (exploratory)
+          - on-call, incident response
+
+      - id: kimley-horn
+        position_id: kimley-horn-intern
+        title: Kimley-Horn
+        image: experience/kimley-horn.png
+        image_alt: Kimley-Horn logo
+        paragraphs:
+          - >-
+            Kimley-Horn is a large civil engineering firm with a nationwide presence.
+          - >-
+            I interned ten weeks and shipped across five internal apps, including a
+            greenfield Blazor tool and a major overhaul and feature extension on another.
+            It gave me an appreciation for tools that simplify work and for automation that
+            saves time and cuts friction.
+        skills:
+          - Blazor, C#, SQL, JavaScript
+          - Azure Document Intelligence
+
+      - id: direct-supply
+        position_id: direct-supply-intern
+        title: Direct Supply
+        image: experience/direct-supply.png
+        image_alt: Direct Supply logo
+        paragraphs:
+          - >-
+            Direct Supply serves senior care and health care, with a large in-house software
+            team behind its product and content systems.
+          - >-
+            I interned part-time over a year—my first sustained software role—on CMS-backed
+            content: feature work, requirements, demos with senior engineers and stakeholders.
+        skills:
+          - web fundamentals, headless architecture
+          - Java, Bash
+          - Docker, React (intro)
 
 education:
   section:
@@ -169,16 +286,55 @@ education:
 
   # Web-only carousel; same list-with-intro shape as skills.
   web:
-    aria_label: Education — coursework and takeaways
+    aria_label: "Education: highlights and coursework"
     slides:
-      - id: ncsu-coursework-sample
-        title: Representative coursework
+      - id: ncsu-overview
+        title: North Carolina State University
+        image: ncsu.png
+        image_alt: NC State (NCSU) mark
         intro: >-
-          Short sample; replace with real classes and takeaways as you flesh this out.
+          I studied at NC State for 5 years. I love learning and wanted to get more depth before working in the industry, so I
+          stayed for a Master of Computer Science. Outside of coursework, I invested in community and leadership
+          through organizations like Phi Sigma Pi and College Mentors for Kids.
+
+      - id: ncsu-cs-signal
+        title: Computer Science Coursework
+        items_layout: table
+        table_first_column_header: Area
+        table_columns:
+          - Courses
+        intro: >-
+          I have been interested in computers my whole life because I always want to know how
+          things work, and computers mystified me most of all. In college, computer science was
+          my main focus.
         items:
-          - name: Distributed systems
-            description: >-
-              Consensus, replication, and fault tolerance; projects in Go and theory exams.
-          - name: Algorithms
-            description: >-
-              Graph algorithms, dynamic programming, and approximation bounds.
+          - name: Systems and Software Engineering
+            table_cells:
+              - Operating Systems, Computer Networks, Database Management Systems, Software Engineering, Software Security, Computer Architecture, Computer Graphics
+          - name: Theory and Foundations
+            table_cells:
+              - Data Structures; Algorithms, Design and Analysis; Automata and Computation Theory; Compiler Construction
+          - name: ML, Data, AI
+            table_cells:
+              - Artificial Intelligence, Machine Learning and Data Analysis, Probability and Statistics
+
+      - id: ncsu-econ-signal
+        title: Economics Coursework
+        items_layout: table
+        table_first_column_header: Area
+        table_columns:
+          - Courses
+        intro: >-
+          Entering college I had a goal of becoming not just an engineer, but a well rounded thinker. 
+          Studying economics was a great complement to computer science: it shaped how I think about
+          how people and entities interact and how I approach problems.
+        items:
+          - name: Econometrics and Quantitative Methods
+            table_cells:
+              - Econometrics I, Econometrics II, Senior Economics Research Project
+          - name: Game Theory and Strategic Systems
+            table_cells:
+              - Game Theory
+          - name: Markets and Global Systems
+            table_cells:
+              - Money and Financial Markets, International Trade

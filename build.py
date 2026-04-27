@@ -7,7 +7,9 @@ from pathlib import Path
 import markdown
 import yaml
 from jinja2 import Environment, FileSystemLoader, select_autoescape
-from pydantic import BaseModel, ConfigDict, Field, field_validator
+from typing import Literal
+
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 
 class Link(BaseModel):
@@ -41,7 +43,25 @@ class NamedBulletItem(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     name: str
-    description: str
+    # Deflist layout: single body cell.
+    description: str | None = None
+    # Table layout: split cells (use with slide `items_layout: table`).
+    # The number of entries must match `SlideListIntro.table_columns`.
+    table_cells: list[str] | None = None
+
+    @model_validator(mode="after")
+    def _one_row_shape(self) -> "NamedBulletItem":
+        has_d = self.description is not None and self.description.strip() != ""
+        has_cells = bool(self.table_cells and any(c.strip() for c in self.table_cells))
+        if has_d and has_cells:
+            raise ValueError(
+                f"item {self.name!r}: set `description` OR `table_cells`, not both"
+            )
+        if not has_d and not has_cells:
+            raise ValueError(
+                f"item {self.name!r}: need `description` or `table_cells`"
+            )
+        return self
 
 
 class SlideListIntro(BaseModel):
@@ -51,8 +71,55 @@ class SlideListIntro(BaseModel):
 
     id: str
     title: str | None = None
+    # Optional: show a logo/visual to the left, like experience slides.
+    image: str | None = None
+    image_alt: str | None = None
     intro: str | None = None
-    items: list[NamedBulletItem] = Field(min_length=1)
+    items_layout: Literal["deflist", "table"] = "deflist"
+    # First column header when `items_layout` is `table` (e.g. Language).
+    table_first_column_header: str | None = None
+    # Remaining column headers when `items_layout` is `table` (e.g. ["Experience", "Favorite feature"]).
+    table_columns: list[str] | None = None
+    items: list[NamedBulletItem] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def _layout_matches_items(self) -> "SlideListIntro":
+        if self.image is not None:
+            if self.image_alt is None or self.image_alt.strip() == "":
+                raise ValueError(
+                    f"slide {self.id!r}: `image_alt` is required when `image` is set"
+                )
+
+        has_intro = self.intro is not None and self.intro.strip() != ""
+        if not has_intro and len(self.items) == 0:
+            raise ValueError(
+                f"slide {self.id!r}: provide `intro` and/or at least one `items` row"
+            )
+
+        for it in self.items:
+            has_d = it.description is not None and it.description.strip() != ""
+            if self.items_layout == "table":
+                if not self.table_columns or len(self.table_columns) < 1:
+                    raise ValueError(
+                        f"slide {self.id!r} uses table layout: set `table_columns` (1+ headers)"
+                    )
+                if it.table_cells is None or len(it.table_cells) != len(self.table_columns):
+                    raise ValueError(
+                        f"slide {self.id!r} uses table layout: item {it.name!r} must have "
+                        f"`table_cells` with {len(self.table_columns)} entr{'y' if len(self.table_columns)==1 else 'ies'}"
+                    )
+                if has_d:
+                    raise ValueError(
+                        f"slide {self.id!r} uses table layout: item {it.name!r} "
+                        "must set only `table_cells`"
+                    )
+            else:
+                if not has_d or it.table_cells is not None:
+                    raise ValueError(
+                        f"slide {self.id!r} uses deflist layout: item {it.name!r} "
+                        "must set only `description`"
+                    )
+        return self
 
 
 class SlideFigureProse(BaseModel):
@@ -62,9 +129,14 @@ class SlideFigureProse(BaseModel):
 
     id: str
     title: str | None = None
+    # If set, `normalize()` fills `date_range` from this experience position (same `id` as YAML).
+    position_id: str | None = None
     image: str
     image_alt: str = Field(min_length=1)
     paragraphs: list[str] = Field(min_length=1)
+    # Optional: short comma-separated list shown below the body copy (e.g. tools or themes).
+    skills: list[str] | None = None
+    skills_label: str | None = None
 
 
 class SkillsWebExtra(BaseModel):
@@ -367,6 +439,15 @@ def normalize(resume: Resume) -> dict:
         else:
             p["progression_segments"] = None
         positions.append(p)
+    pos_by_id = {p["id"]: p for p in positions}
+    web_data = (
+        resume.experience.web.model_dump() if resume.experience.web else None
+    )
+    if web_data:
+        for slide in web_data.get("slides", []):
+            pid = slide.get("position_id")
+            if pid and pid in pos_by_id:
+                slide["date_range"] = pos_by_id[pid]["date_range"]
     edu_entries = []
     for ent in resume.education.entries:
         e = ent.model_dump()
@@ -376,7 +457,7 @@ def normalize(resume: Resume) -> dict:
     experience_view = {
         "section": section_context("experience", resume.experience.section),
         "positions": positions,
-        "web": resume.experience.web.model_dump() if resume.experience.web else None,
+        "web": web_data,
     }
     education_view = {
         "section": section_context("education", resume.education.section),

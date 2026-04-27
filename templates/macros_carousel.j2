@@ -42,15 +42,84 @@
           {% if slide.title %}
           <h3 class="resume-carousel-slide-title">{{ slide.title }}</h3>
           {% endif %}
-          {% if slide.intro %}
-          <p class="resume-carousel-slide-intro">{{ slide.intro }}</p>
+          {% if slide.image %}
+          <div class="resume-carousel-figure-pair">
+            <figure class="resume-carousel-figure resume-carousel-figure--list resume-carousel-figure--{{ slide.id | e }}">
+              <img src="{{ slide.image | e }}" alt="{{ slide.image_alt | e }}" loading="lazy" decoding="async" />
+            </figure>
+            <div class="resume-carousel-figure-text resume-carousel-slide-list-body">
+              {% if slide.intro %}
+              <p class="resume-carousel-slide-intro">{{ slide.intro }}</p>
+              {% endif %}
+              {% if slide.items_layout == "table" %}
+              <div class="resume-carousel-table-wrap">
+                <table class="resume-carousel-table">
+                  <thead>
+                    <tr>
+                      <th scope="col">{{ (slide.table_first_column_header or "Name") | e }}</th>
+                      <th scope="col">Experience</th>
+                      <th scope="col">Favorite feature</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for item in slide["items"] %}
+                    <tr>
+                      <th scope="row">{{ item.name | e }}</th>
+                      <td>{{ item.experience | e }}</td>
+                      <td>{{ item.favorite_feature | e }}</td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+              {% else %}
+              <dl class="resume-carousel-deflist">
+                {% for item in slide["items"] %}
+                <dt>{{ item.name }}</dt>
+                <dd>{{ item.description }}</dd>
+                {% endfor %}
+              </dl>
+              {% endif %}
+            </div>
+          </div>
+          {% else %}
+          <div class="resume-carousel-slide-list-body">
+            {% if slide.intro %}
+            <p class="resume-carousel-slide-intro">{{ slide.intro }}</p>
+            {% endif %}
+            {% if slide["items"] and slide["items"]|length > 0 and slide.items_layout == "table" %}
+            <div class="resume-carousel-table-wrap">
+              <table class="resume-carousel-table">
+                <thead>
+                  <tr>
+                    <th scope="col">{{ (slide.table_first_column_header or "Name") | e }}</th>
+                    {% for col in slide.table_columns %}
+                    <th scope="col">{{ col | e }}</th>
+                    {% endfor %}
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for item in slide["items"] %}
+                  <tr>
+                    <th scope="row">{{ item.name | e }}</th>
+                    {% for cell in item.table_cells %}
+                    <td>{{ cell | e }}</td>
+                    {% endfor %}
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            {% elif slide["items"] and slide["items"]|length > 0 %}
+            <dl class="resume-carousel-deflist">
+              {% for item in slide["items"] %}
+              <dt>{{ item.name }}</dt>
+              <dd>{{ item.description }}</dd>
+              {% endfor %}
+            </dl>
+            {% endif %}
+          </div>
           {% endif %}
-          <dl class="resume-carousel-deflist">
-            {% for item in slide["items"] %}
-            <dt>{{ item.name }}</dt>
-            <dd>{{ item.description }}</dd>
-            {% endfor %}
-          </dl>
         </section>
         {% endfor %}
       </div>
@@ -109,12 +178,26 @@
           {% if slide.title %}
           <h3 class="resume-carousel-slide-title">{{ slide.title }}</h3>
           {% endif %}
-          <figure class="resume-carousel-figure">
-            <img src="{{ slide.image | e }}" alt="{{ slide.image_alt | e }}" loading="lazy" decoding="async" />
-          </figure>
-          {% for para in slide.paragraphs %}
-          <p class="resume-carousel-prose">{{ para }}</p>
-          {% endfor %}
+          {% if slide.date_range %}
+          <p class="resume-carousel-slide-dates">{{ slide.date_range | e }}</p>
+          {% endif %}
+          <div class="resume-carousel-figure-pair">
+            <figure class="resume-carousel-figure resume-carousel-figure--{{ slide.id | e }}">
+              <img src="{{ slide.image | e }}" alt="{{ slide.image_alt | e }}" loading="lazy" decoding="async" />
+            </figure>
+            <div class="resume-carousel-figure-text">
+              {% for para in slide.paragraphs %}
+              <p class="resume-carousel-prose">{{ para }}</p>
+              {% endfor %}
+              {% if slide.skills and slide.skills|length > 0 %}
+              <p class="resume-carousel-skills">
+                <span class="resume-carousel-skills-label">{{ (slide.skills_label or "Skills developed") | e }}:</span><span
+                  class="resume-carousel-skills-terms"
+                > {{ slide.skills | join(", ") | e }}</span>
+              </p>
+              {% endif %}
+            </div>
+          </div>
         </section>
         {% endfor %}
       </div>

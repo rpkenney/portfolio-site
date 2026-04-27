@@ -455,11 +455,16 @@ article:last-child {
   box-shadow: var(--shadow-sm);
 }
 
-/* Fixed-height stage; long slides scroll inside */
+/* Constant stage height (no jump between slides); long slides scroll inside (~2/3 of prior 11/70/28) */
+/* Stage height: modest bump over 2/3 (~12.5%) so tables/lists scroll a bit less. */
 .resume-carousel-viewport {
-  min-height: 11rem;
-  max-height: min(70vh, 28rem);
+  height: clamp(
+    calc(11rem * 3 / 4),
+    calc(70vh * 3 / 4),
+    calc(28rem * 3 / 4)
+  );
   overflow: auto;
+  overflow-x: hidden;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -472,9 +477,61 @@ html.resume-carousel-motion-ok .resume-carousel-viewport {
   scroll-behavior: smooth;
 }
 
+/* Track is at least one viewport-tall. Figure carousels: column flex so the open slide
+   (flex:1) actually fills the stage; % min-height on the slide is unreliable on a block track. */
+.resume-carousel-track {
+  min-height: 100%;
+}
+.resume-carousel-viewport:has(.resume-carousel-slide--figure) .resume-carousel-track {
+  display: flex;
+  flex-direction: column;
+}
+
+/* List carousels (Skills, Education): fill the stage and vertically center copy when it’s shorter than the viewport. */
+.resume-carousel-viewport:has(.resume-carousel-slide--list) .resume-carousel-track {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Must not set display on [hidden] slides: two classes beat [hidden] and undo display:none. */
+.resume-carousel-slide--figure:not([hidden]) {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  min-width: 0;
+}
+
+.resume-carousel-slide--list:not([hidden]) {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  min-width: 0;
+  min-height: 100%;
+}
+
+/* Same idea as `.resume-carousel-figure-pair`: title stays top; body fills the stage and centers vertically. */
+.resume-carousel-slide-list-body {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  min-height: 0;
+}
+
 .resume-carousel-slide-title {
-  margin: 0 0 0.35rem;
+  margin: 0 0 0.12rem;
   font-size: 0.95rem;
+}
+
+.resume-carousel-slide-dates {
+  margin: 0 0 0.45rem;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.01em;
 }
 
 .resume-carousel-slide-intro {
@@ -500,21 +557,129 @@ html.resume-carousel-motion-ok .resume-carousel-viewport {
   padding-left: 1rem;
 }
 
+.resume-carousel-table-wrap {
+  margin: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.resume-carousel-table {
+  width: 100%;
+  margin: 0;
+  border-collapse: collapse;
+  font-size: 0.88em;
+  line-height: 1.35;
+}
+
+.resume-carousel-table th,
+.resume-carousel-table td {
+  border: 1px solid var(--border);
+  padding: 0.3rem 0.5rem;
+  vertical-align: top;
+  text-align: left;
+}
+
+.resume-carousel-table thead th {
+  font-weight: 600;
+  color: var(--text);
+  background: var(--surface-control);
+}
+
+.resume-carousel-table tbody th[scope="row"] {
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+/* Figure carousels: logo / visual left, copy right; stack on narrow viewports */
+.resume-carousel-figure-pair {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
 .resume-carousel-figure {
-  margin: 0 0 0.5rem;
+  margin: 0;
+  flex: 0 0 auto;
+  width: 11rem;
+  min-width: 0;
+  padding: 0.4rem;
+  box-sizing: border-box;
+}
+
+.resume-carousel-figure--list {
+  width: 7.5rem;
 }
 
 .resume-carousel-figure img {
   display: block;
+  width: 100%;
   max-width: 100%;
   height: auto;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+}
+
+/* Small per-logo tuning */
+.resume-carousel-figure--pendo img {
+  transform: scale(1.08);
+  transform-origin: center;
+}
+
+.resume-carousel-figure--ncsu-overview img {
+  transform: none;
+}
+
+.resume-carousel-figure--ncsu-overview {
+  width: 9rem;
+}
+
+.resume-carousel-figure-text {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .resume-carousel-prose {
   margin: 0.4rem 0 0;
   line-height: 1.45;
+}
+
+.resume-carousel-figure-text .resume-carousel-prose:first-of-type {
+  margin-top: 0;
+}
+
+.resume-carousel-skills {
+  margin: 0.55rem 0 0;
+  padding-bottom: 0.35rem;
+  font-size: 0.9em;
+  line-height: 1.4;
+  color: var(--text-muted);
+  overflow-wrap: anywhere;
+}
+.resume-carousel-skills-label {
+  font-weight: 600;
+  color: var(--text);
+  margin-right: 0.1rem;
+}
+.resume-carousel-skills-terms {
+  margin: 0;
+}
+
+@media (max-width: 28rem) {
+  .resume-carousel-figure-pair {
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+  }
+
+  .resume-carousel-figure {
+    width: 100%;
+    max-width: 14rem;
+    align-self: center;
+  }
 }
 
 .resume-carousel-toolbar {
