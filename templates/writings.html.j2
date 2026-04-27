@@ -6,7 +6,9 @@
       <p class="site-placeholder-lead">Sources are listed in <code>writings/index.yaml</code>; each path is built from Markdown in the repo.</p>
     </header>
 
-    {% if writings_articles %}
+    {% if under_construction %}
+    {% include "under_construction_content.html.j2" %}
+    {% elif writings_articles %}
     <section class="writings-list" aria-labelledby="writings-list-heading">
       <h2 id="writings-list-heading">Articles</h2>
       <ul class="writings-list-items">

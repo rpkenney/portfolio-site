@@ -5,6 +5,10 @@
       <h1>{{ page_title }}</h1>
       <p class="writing-back"><a href="../index.html">← Writings</a></p>
     </header>
+    {% if under_construction %}
+    {% include "under_construction_content.html.j2" %}
+    {% else %}
     <article class="writing-body">{{ body_html|safe }}</article>
+    {% endif %}
   </main>
 {% endblock %}

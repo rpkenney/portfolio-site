@@ -8,6 +8,12 @@
         {{ profile.contact.email }} | {{ profile.contact.phone }} | {{ profile.contact.location }}
         {% for link in profile.links %} | <a href="{{ link.url }}">{{ link.url }}</a>{% endfor %}
       </p>
+      {% if profile.summary %}
+      <div class="resume-summary-block">
+        <h2 class="resume-summary-heading">Summary</h2>
+        <p class="resume-summary">{{ profile.summary | join(" ") }}</p>
+      </div>
+      {% endif %}
     </header>
 
     <section id="{{ skills.section.id }}" class="resume-section" aria-labelledby="{{ skills.section.heading_id }}">
@@ -86,7 +92,7 @@
           </div>
           {% for d in e.degrees %}
           <div class="entry-head degree-row">
-            <span class="entry-title">{{ d.credential }}</span>
+            <span class="entry-title">{{ d.credential }}{% if d.tag %} <span class="degree-tag">({{ d.tag }})</span>{% endif %}</span>
             <span class="entry-date">{{ d.date_display }}</span>
           </div>
           {% endfor %}

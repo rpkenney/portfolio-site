@@ -6,7 +6,9 @@
       <p class="site-placeholder-lead">Projects are defined in <code>data/projects.yaml</code>. README embed from GitHub is not wired yet.</p>
     </header>
 
-    {% if projects %}
+    {% if under_construction %}
+    {% include "under_construction_content.html.j2" %}
+    {% elif projects %}
     <section class="portfolio-projects" aria-labelledby="portfolio-projects-heading">
       <h2 id="portfolio-projects-heading">Projects</h2>
       {% for p in projects %}

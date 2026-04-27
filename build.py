@@ -27,6 +27,7 @@ class Profile(BaseModel):
     full_name: str
     contact: Contact
     links: list[Link]
+    summary: list[str] | None = None
 
 
 class SectionMeta(BaseModel):
@@ -211,6 +212,7 @@ class Experience(BaseModel):
 class Degree(BaseModel):
     credential: str
     date: str
+    tag: str | None = None
 
 
 class EducationEntry(BaseModel):
@@ -547,7 +549,13 @@ def main() -> None:
         help="Writings index YAML (default: ./writings/index.yaml)",
     )
     ap.add_argument("-o", "--output", type=Path, default=root / "dist")
+    ap.add_argument(
+        "--no-under-construction",
+        action="store_true",
+        help="Show full portfolio and writings content instead of static/under_construction.gif.",
+    )
     args = ap.parse_args()
+    under_construction = not args.no_under_construction
 
     data = load_yaml(args.input)
 
@@ -599,6 +607,10 @@ def main() -> None:
         **proj_view,
         "writings_index": writings_idx_view,
         "writings_articles": writings_articles_list,
+        "under_construction": under_construction,
+        "under_construction_src": (
+            "../under_construction.gif" if under_construction else ""
+        ),
     }
 
     portfolio_dir = out_dir / "portfolio"
@@ -644,6 +656,12 @@ def main() -> None:
                     "css_href": css2,
                     "js_href": js2,
                     "nav": nav_for_page("writing_post"),
+                    "under_construction": under_construction,
+                    "under_construction_src": (
+                        "../../under_construction.gif"
+                        if under_construction
+                        else ""
+                    ),
                 },
             )
         )

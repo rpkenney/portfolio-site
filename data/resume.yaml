@@ -4,13 +4,16 @@ profile:
     email: robert.kenney128@gmail.com
     phone: (919) 935-3628
     location: Raleigh, NC
+  summary:
+    - Backend Software Engineer building scalable backend services, distributed systems, and cloud infrastructure.
+    - Proven impact across latency reduction, reliability engineering, and cost optimization.
   links:
     - label: LinkedIn
       url: https://linkedin.com/in/robert-kenney/
 
 skills:
   section:
-    heading: Skills
+    heading: Skills/Tools
   groups:
     - id: languages
       label: Languages
@@ -22,21 +25,27 @@ skills:
         - Java
         - JavaScript
 
-    - id: distributed-data
-      label: Distributed Systems / Infrastructure
+    - id: distributed-systems
+      label: Distributed Systems
       items:
-        - Kubernetes
-        - Google Cloud Platform (GCP)
-        - BigQuery
-        - Trino, Apache Iceberg, Spark
-        - Terraform
+        - Query Planning
+        - Distributed Execution
+        - Performance Tuning
+        - Trino / Iceberg / Spark
 
     - id: infrastructure
-      label: Tooling
+      label: Infrastructure
       items:
+        - Kubernetes
+        - Terraform
+        - Google Cloud Platform (GKE, Pub/Sub, Cloud Storage, Datastore)
+
+    - id: tools
+      label: Tools
+      items:
+        - Git
         - Cursor
         - Claude Code
-        - Git
 
   # Web-only carousel (Step 2+); omitted from print. One slide per `groups` row.
   web:
@@ -50,7 +59,7 @@ skills:
           - Experience
           - Favorite feature
         intro: >-
-          I enjoy learning languages. I prefer a functional style when it fits, but I appreciate
+          I have shipped code in a variety of languages. I prefer a functional style when it fits, but I appreciate
           OOP and defining interface contracts when a system needs clear boundaries.
         items:
           - name: Go
@@ -78,10 +87,10 @@ skills:
               - UI and small tools
               - Short path from idea to a solid, usable interface
 
-      - id: distributed-data-detail
-        title: Distributed Systems / Data Infrastructure
+      - id: infrastructure-detail
+        title: Infrastructure
         intro: >-
-          I take great interest in understanding how code becomes a running system.
+          I care about how code becomes a running system, with emphasis on operability, reliability, and performance under real production constraints.
         items:
           - name: Kubernetes
             description: >-
@@ -90,38 +99,40 @@ skills:
               going wrong.
           - name: Google Cloud Platform (GCP)
             description: >-
-              Most of my GCP time is Pub/Sub, GKE, Datastore, Cloud Storage, and BigQuery:
-              wiring services together, debugging from metrics/logs, and tracing how data flows
-              through the system.
-          - name: Trino, Apache Iceberg, Spark
-            description: >-
-              I like open-source tools in this space; we don’t run these in prod today. I’ve read
-              up on them and benchmarked them against our stack (including Trino on Iceberg versus
-              BigQuery) to compare performance and trade-offs.
+              Built and operated services on GKE, Pub/Sub, Cloud Storage, and Datastore; debugging production failure modes (retries, backpressure, partial outages), and reasoning about scaling and cost from logs/metrics.
           - name: Terraform
             description: >-
               I am comfortable with infra-as-code, making repeatable changes instead of manual clicks.
 
-      - id: infrastructure-detail
-        title: Tooling
+      - id: distributed-systems-detail
+        title: Distributed Systems
+        intro: >-
+          I’m interested in systems that stay correct and predictable under load and failure, and the mechanics that drive performance and reliability.
+        items:
+          - name: Query planning and execution
+            description: >-
+              Latency-oriented reasoning about planning choices (ordering, grouping, join strategies) and how they map to physical execution.
+          - name: Performance and cost
+            description: >-
+              Benchmarking with production-shaped workloads to evaluate trade-offs and validate changes with measurable impact.
+          - name: Trino, Apache Iceberg, Spark
+            description: >-
+              Benchmarking and migration evaluation work comparing Trino (Iceberg) against BigQuery using production-shaped workloads, with attention to query performance, cost, and correctness trade-offs.
+
+      - id: tools-detail
+        title: Tools
         intro: >-
           I use these and other tools day-to-day to move quickly and stay organized.
         items:
-          - name: Claude Code
-            description: >-
-              I use Claude Code for background development: multiple parallel agents to prep work
-              into a reviewable state, then I iterate and refine. Over time I have built a knowledge
-              base of codebase-specific context, style, and workflows, plus notes that serve as a
-              reference for me and for Claude.
-          - name: Cursor
-            description: >-
-              I use Cursor personally and professionally. It is great for quick, high-level
-              investigations and debugging sessions, plus development where I am the
-              primary driver.
           - name: Git
             description: >-
-              Git is incredibly powerful, especially when paired with Claude Code and worktrees for
-              parallel changes and clean iteration.
+              Git for disciplined iteration, code review, and safe parallel development with branches and worktrees.
+          - name: Claude Code
+            description: >-
+              I use Claude Code as a secondary accelerator for research, prototyping, and drafting design/context docs, then I iterate to a clean, reviewable implementation.
+          - name: Cursor
+            description: >-
+              I use Cursor for fast investigation and debugging in complex codebases, and for high-leverage refactors where an assistant can speed up navigation and iteration.
 
 experience:
   section:
@@ -139,46 +150,35 @@ experience:
         - start: "2024-06"
           end: "2024-08"
           arrangement: intern
-          title: SWE Intern
+          title: Intern
         - start: "2024-08"
           end: "2025-05"
           arrangement: contractor
-          title: Associate SWE (Contract)
+          title: Contractor
         - start: "2025-05"
           end: "2026-02"
           arrangement: full_time
-          title: Associate SWE
+          title: Associate
+        - start: "2026-02"
+          end: null
+          arrangement: full_time
+          title: Mid-level
 
       highlights:
         - text: >-
-            Reduced query latency by up to ~20% in production workloads by propagating sort
-            preferences through the query planner, enabling scans to select optimal
-            on-disk sort-order variants
+            Reduced query latency ~20% by propagating sort requirements through query planning and selecting optimal on-disk sort-order variants
 
         - text: >-
-            Led benchmarking and migration evaluation for moving proprietary columnar data
-            to Parquet, comparing Trino (Iceberg connector) vs BigQuery on Iceberg-backed
-            datasets; validated performance using production-shaped workloads on GKE
+            Drove Parquet migration evaluation and benchmarking initiative across Trino (Iceberg) vs BigQuery using production-shaped GKE workloads to quantify cost/performance trade-offs
 
         - text: >-
-            Improved resilience of distributed query execution under load by refactoring
-            coordinator–worker orchestration around a uniform polling model, ensuring
-            consistent parent–child task dependency tracking during partial failures
+            Improved distributed query reliability by refactoring coordinator–worker orchestration to a uniform polling model with consistent parent–child dependency tracking under partial failure
 
         - text: >-
-            Reduced annual infrastructure costs by $70K by implementing a read-through cache
-            for a high-traffic entity, significantly lowering repeated backend load
-
-        - text: >-
-            Owned on-call responsibilities across multiple rotations, triaging and resolving
-            customer-impacting production incidents end-to-end with root-cause mitigation
-
-        - text: >-
-            Automated cross-environment subscription migration workflows, replacing a
-            multi-hour manual process with a repeatable and auditable pipeline
+            Reduced infrastructure costs $70K/year via read-through caching for a high-traffic entity, lowering repeated backend load in production
 
     - id: kimley-horn-intern
-      title: Software Developer Intern
+      title: Software Engineer Intern
       company: Kimley-Horn
       location: Raleigh, NC
       employment: intern
@@ -186,16 +186,13 @@ experience:
       end: "2023-08"
       highlights:
         - text: >-
-            Reduced payload size and improved responsiveness of large-scale data grids by
-            implementing server-side pagination through a reusable query abstraction layer
+            Reduced payload size and improved grid responsiveness via server-side pagination abstraction layer
 
         - text: >-
-            Eliminated ~40 hours/week of manual processing by automating document intake using
-            Azure AI Document Intelligence for structured data extraction
+            Eliminated ~40 hours/week manual processing using Azure Document Intelligence automation
 
         - text: >-
-            Replaced a manual Excel-based fleet tracking system with a full-stack workflow,
-            improving operational visibility and enabling distributed team coordination
+            Rebuilt fleet tracking system into full-stack workflow, improving operational visibility and coordination
 
     - id: direct-supply-intern
       title: Software Engineer Intern
@@ -206,8 +203,7 @@ experience:
       end: "2023-03"
       highlights:
         - text: >-
-            Built CMS-based product-content segmentation logic to better organize and target
-            content across two high-growth business segments
+            Built CMS-driven segmentation logic improving product content organization across business lines
 
   web:
     aria_label: "Experience: expanded stories"
@@ -222,9 +218,8 @@ experience:
             Pendo gives software teams product analytics and in-app user guidance.
           - >-
             I interned, stayed on as a contractor while I finished my degree, and then joined
-            full time. I work on a platform team focused on our custom internal data warehouse, tuned
-            for how Pendo and our customers use the product. I spend most of my time on that
-            stack in production, from the query and storage path to how we run and operate
+            full time. I work on Pendo’s internal distributed analytics warehouse powering product data workloads.
+            I spend most of my time on that stack in production, from the query and storage path to how we run and operate
             the services.
         skills:
           - Go
@@ -262,8 +257,8 @@ experience:
             Direct Supply serves senior care and health care, with a large in-house software
             team behind its product and content systems.
           - >-
-            I interned part-time over a year—my first sustained software role—on CMS-backed
-            content: feature work, requirements, demos with senior engineers and stakeholders.
+            I interned part-time long term for over a year in my first sustained software role, working on CMS-backed
+            content through feature delivery, requirements, and demos with senior engineers and stakeholders.
         skills:
           - web fundamentals, headless architecture
           - Java, Bash
@@ -279,6 +274,7 @@ education:
       degrees:
         - credential: Master of Computer Science
           date: "2025-05"
+          tag: "4+1 program"
         - credential: Bachelor of Science in Computer Science
           date: "2024-05"
         - credential: Bachelor of Science in Economics
@@ -293,9 +289,8 @@ education:
         image: ncsu.png
         image_alt: NC State (NCSU) mark
         intro: >-
-          I studied at NC State for 5 years. I love learning and wanted to get more depth before working in the industry, so I
-          stayed for a Master of Computer Science. Outside of coursework, I invested in community and leadership
-          through organizations like Phi Sigma Pi and College Mentors for Kids.
+          I studied at NC State for 5 years. I stayed an additional year to complete a Master of Computer Science, deepening my focus on systems and software engineering.
+          Outside of coursework, I invested in community and leadership through organizations like Phi Sigma Pi and College Mentors for Kids.
 
       - id: ncsu-cs-signal
         title: Computer Science Coursework
@@ -304,16 +299,14 @@ education:
         table_columns:
           - Courses
         intro: >-
-          I have been interested in computers my whole life because I always want to know how
-          things work, and computers mystified me most of all. In college, computer science was
-          my main focus.
+          I intentionally leaned into “how systems work” coursework to build a rigorous mental model of performance, reliability, and production behavior across operating systems, networks, databases, security, and computer architecture.
         items:
           - name: Systems and Software Engineering
             table_cells:
               - Operating Systems, Computer Networks, Database Management Systems, Software Engineering, Software Security, Computer Architecture, Computer Graphics
           - name: Theory and Foundations
             table_cells:
-              - Data Structures; Algorithms, Design and Analysis; Automata and Computation Theory; Compiler Construction
+              - Data Structures; Algorithms, Design and Analysis; Automata and Computation Theory, Compiler Construction
           - name: ML, Data, AI
             table_cells:
               - Artificial Intelligence, Machine Learning and Data Analysis, Probability and Statistics
@@ -325,9 +318,7 @@ education:
         table_columns:
           - Courses
         intro: >-
-          Entering college I had a goal of becoming not just an engineer, but a well rounded thinker. 
-          Studying economics was a great complement to computer science: it shaped how I think about
-          how people and entities interact and how I approach problems.
+          Economics strengthened my quantitative toolkit and how I reason about incentives, and strategic interactions in real-world systems.
         items:
           - name: Econometrics and Quantitative Methods
             table_cells:
