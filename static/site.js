@@ -1,5 +1,7 @@
 (function () {
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const mobileMq = window.matchMedia("(max-width: 767px)");
+  const navMq = window.matchMedia("(max-width: 1149px)");
 
   /** Must match `site.css` height transition on `.resume-section-body--animating` (open). */
   const OPEN_HEIGHT_MS = 350;
@@ -9,6 +11,15 @@
   let expandedSection = document.querySelector("section.resume-section--web-active") || null;
 
   let transitioning = false;
+
+  function modalModeEnabled() {
+    return mobileMq.matches;
+  }
+
+  function syncModalChrome() {
+    const on = !!expandedSection && modalModeEnabled();
+    document.documentElement.classList.toggle("resume-web-modal-open", on);
+  }
 
   function getSlides(carousel) {
     return Array.from(carousel.querySelectorAll(".resume-carousel-slide"));
@@ -179,6 +190,34 @@
     const from = expandedSection;
     const to = nextSection;
 
+    if (modalModeEnabled()) {
+      if (from) {
+        const carousel = from.querySelector("[data-resume-carousel]");
+        const expand = from.querySelector("[data-resume-carousel-expand]");
+        if (carousel) {
+          carousel.hidden = true;
+          from.classList.remove("resume-section--web-active");
+          setExpandLabel(expand, false);
+          goToSlide(carousel, 0);
+        }
+      }
+      if (to) {
+        const carousel = to.querySelector("[data-resume-carousel]");
+        const expand = to.querySelector("[data-resume-carousel-expand]");
+        if (carousel) {
+          carousel.hidden = false;
+          to.classList.add("resume-section--web-active");
+          setExpandLabel(expand, true);
+          goToSlide(carousel, parseInt(carousel.dataset.slideIndex || "0", 10));
+        }
+      }
+      expandedSection = to;
+      syncModalChrome();
+      if (to) focusExpandedCarousel(to);
+      else if (from && restoreFocusOnClose) from.querySelector("[data-resume-carousel-expand]")?.focus();
+      return;
+    }
+
     if (reduceMotion) {
       if (from) applyCollapsed(from);
       if (to) applyExpanded(to);
@@ -195,6 +234,7 @@
     if (!from && to) {
       animateOpen(to, () => {
         expandedSection = to;
+        syncModalChrome();
         transitioning = false;
         focusExpandedCarousel(to);
       });
@@ -204,6 +244,7 @@
     if (from && !to) {
       animateClose(from, restoreFocusOnClose, () => {
         expandedSection = null;
+        syncModalChrome();
         transitioning = false;
       });
       return;
@@ -215,6 +256,7 @@
       pending -= 1;
       if (pending !== 0) return;
       expandedSection = to;
+      syncModalChrome();
       transitioning = false;
       focusExpandedCarousel(to);
     };
@@ -291,6 +333,9 @@
         }
         afterHeightTransition(wrapper, () => {
           releaseWrapper(wrapper);
+          /* `followExpandBottomEdge…` only scrolls when the wrapper bottom clears the pane;
+           * finish with scrollIntoView so upper sections behave like the last one. */
+          scrollExpandedRegionIntoView(section);
           onDone();
         });
         requestAnimationFrame(() => {
@@ -433,4 +478,43 @@
   if (!reduceMotion) {
     document.documentElement.classList.add("resume-carousel-motion-ok");
   }
+
+  /* Mobile-only: hamburger nav for page selector */
+  (function wireMobileNav() {
+    const nav = document.querySelector("[data-site-nav]");
+    const btn = nav?.querySelector("[data-site-nav-toggle]");
+    const list = nav?.querySelector("#site-nav-list");
+    if (!nav || !btn || !list) return;
+
+    function sync() {
+      const open = nav.classList.contains("site-nav--open");
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+      list.hidden = navMq.matches ? !open : false;
+    }
+
+    function setOpen(next) {
+      nav.classList.toggle("site-nav--open", !!next);
+      sync();
+    }
+
+    btn.addEventListener("click", () => setOpen(!nav.classList.contains("site-nav--open")));
+    list.addEventListener("click", (e) => {
+      const a = e.target && e.target.closest ? e.target.closest("a") : null;
+      if (!a) return;
+      if (navMq.matches) setOpen(false);
+    });
+
+    if (typeof navMq.addEventListener === "function") navMq.addEventListener("change", () => setOpen(false));
+    else if (typeof navMq.addListener === "function") navMq.addListener(() => setOpen(false));
+
+    sync();
+  })();
+
+  if (typeof mobileMq.addEventListener === "function") {
+    mobileMq.addEventListener("change", () => syncModalChrome());
+  } else if (typeof mobileMq.addListener === "function") {
+    mobileMq.addListener(() => syncModalChrome());
+  }
+
+  syncModalChrome();
 })();

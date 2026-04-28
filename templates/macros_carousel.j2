@@ -44,7 +44,10 @@
           {% endif %}
           {% if slide.image %}
           <div class="resume-carousel-figure-pair">
-            <figure class="resume-carousel-figure resume-carousel-figure--list resume-carousel-figure--{{ slide.id | e }}">
+            <figure
+              class="resume-carousel-figure resume-carousel-figure--list resume-carousel-figure--{{ slide.id | e }}"
+              {% if slide.id == "pendo" %}style="--logo-scale: 1.08"{% elif slide.id == "ncsu-overview" %}style="--figure-width: 9rem"{% endif %}
+            >
               <img src="{{ slide.image | e }}" alt="{{ slide.image_alt | e }}" loading="lazy" decoding="async" />
             </figure>
             <div class="resume-carousel-figure-text resume-carousel-slide-list-body">
@@ -182,7 +185,10 @@
           <p class="resume-carousel-slide-dates">{{ slide.date_range | e }}</p>
           {% endif %}
           <div class="resume-carousel-figure-pair">
-            <figure class="resume-carousel-figure resume-carousel-figure--{{ slide.id | e }}">
+            <figure
+              class="resume-carousel-figure resume-carousel-figure--{{ slide.id | e }}"
+              {% if slide.id == "pendo" %}style="--logo-scale: 1.08"{% elif slide.id == "ncsu-overview" %}style="--figure-width: 9rem"{% endif %}
+            >
               <img src="{{ slide.image | e }}" alt="{{ slide.image_alt | e }}" loading="lazy" decoding="async" />
             </figure>
             <div class="resume-carousel-figure-text">

@@ -1,0 +1,523 @@
+/* —— Section web carousels (Step 3 interaction) —— */
+
+.resume-section-web[hidden] {
+  display: none;
+}
+
+.resume-section-default[hidden] {
+  display: none !important;
+}
+
+.resume-section--web-active {
+  scroll-margin-top: 0.5rem;
+}
+
+.resume-carousel {
+  margin-top: 0.35rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.55rem 0.7rem 0.5rem;
+  background: var(--surface-elevated);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Constant stage height (no jump between slides); long slides scroll inside (~2/3 of prior 11/70/28) */
+/* Stage height: modest bump over 2/3 (~12.5%) so tables/lists scroll a bit less. */
+.resume-carousel-viewport {
+  height: clamp(
+    calc(11rem * 3 / 4),
+    calc(70vh * 3 / 4),
+    calc(28rem * 3 / 4)
+  );
+  overflow: auto;
+  overflow-x: hidden;
+}
+
+/* Mobile: give carousels more breathing room, reduce “squished” feel */
+@media (max-width: 40rem) {
+  .resume-carousel {
+    font-size: 0.9rem;
+    padding: 0.6rem 0.65rem 0.55rem;
+  }
+
+  .resume-carousel-viewport {
+    height: min(78vh, 34rem);
+  }
+
+  .resume-carousel-slide-title {
+    font-size: 0.96rem;
+  }
+
+  .resume-carousel-slide-dates {
+    font-size: 0.82rem;
+  }
+
+  .resume-carousel-prose,
+  .resume-carousel-slide-intro {
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .resume-carousel-figure {
+    width: 9.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .resume-carousel-viewport {
+    scroll-behavior: auto;
+  }
+}
+
+html.resume-carousel-motion-ok .resume-carousel-viewport {
+  scroll-behavior: smooth;
+}
+
+/* Track is at least one viewport-tall. Figure carousels: column flex so the open slide
+   (flex:1) actually fills the stage; % min-height on the slide is unreliable on a block track. */
+.resume-carousel-track {
+  min-height: 100%;
+}
+.resume-carousel-viewport:has(.resume-carousel-slide--figure) .resume-carousel-track {
+  display: flex;
+  flex-direction: column;
+}
+
+/* List carousels (Skills, Education): fill the stage and vertically center copy when it’s shorter than the viewport. */
+.resume-carousel-viewport:has(.resume-carousel-slide--list) .resume-carousel-track {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Must not set display on [hidden] slides: two classes beat [hidden] and undo display:none. */
+.resume-carousel-slide--figure:not([hidden]) {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  min-width: 0;
+}
+
+.resume-carousel-slide--list:not([hidden]) {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  min-width: 0;
+  min-height: 100%;
+}
+
+/* Same idea as `.resume-carousel-figure-pair`: title stays top; body fills the stage and centers vertically. */
+.resume-carousel-slide-list-body {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  min-height: 0;
+}
+
+.resume-carousel-slide-title {
+  margin: 0 0 0.12rem;
+  font-size: 0.95rem;
+}
+
+.resume-carousel-slide-dates {
+  margin: 0 0 0.45rem;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  letter-spacing: 0.01em;
+}
+
+.resume-carousel-slide-intro {
+  margin: 0 0 0.45rem;
+  line-height: 1.4;
+}
+
+.resume-carousel-deflist {
+  margin: 0;
+}
+
+.resume-carousel-deflist dt {
+  font-weight: 600;
+  margin-top: 0.35rem;
+}
+
+.resume-carousel-deflist dt:first-child {
+  margin-top: 0;
+}
+
+.resume-carousel-deflist dd {
+  margin: 0.06rem 0 0;
+  padding-left: 1rem;
+}
+
+.resume-carousel-table-wrap {
+  margin: 0;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.resume-carousel-table {
+  width: 100%;
+  margin: 0;
+  border-collapse: collapse;
+  font-size: 0.88em;
+  line-height: 1.35;
+}
+
+.resume-carousel-table th,
+.resume-carousel-table td {
+  border: 1px solid var(--border);
+  padding: 0.3rem 0.5rem;
+  vertical-align: top;
+  text-align: left;
+}
+
+.resume-carousel-table thead th {
+  font-weight: 600;
+  color: var(--text);
+  background: var(--surface-control);
+}
+
+.resume-carousel-table tbody th[scope="row"] {
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+/* Figure carousels: logo / visual left, copy right; stack on narrow viewports */
+.resume-carousel-figure-pair {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.resume-carousel-figure {
+  margin: 0;
+  flex: 0 0 auto;
+  width: var(--figure-width, 11rem);
+  min-width: 0;
+  padding: 0.4rem;
+  box-sizing: border-box;
+}
+
+.resume-carousel-figure--list {
+  width: var(--figure-width, 7.5rem);
+}
+
+.resume-carousel-figure img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  transform: scale(var(--logo-scale, 1));
+  transform-origin: center;
+}
+
+.resume-carousel-figure-text {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.resume-carousel-prose {
+  margin: 0.4rem 0 0;
+  line-height: 1.45;
+}
+
+.resume-carousel-figure-text .resume-carousel-prose:first-of-type {
+  margin-top: 0;
+}
+
+.resume-carousel-skills {
+  margin: 0.55rem 0 0;
+  padding-bottom: 0.35rem;
+  font-size: 0.9em;
+  line-height: 1.4;
+  color: var(--text-muted);
+  overflow-wrap: anywhere;
+}
+.resume-carousel-skills-label {
+  font-weight: 600;
+  color: var(--text);
+  margin-right: 0.1rem;
+}
+.resume-carousel-skills-terms {
+  margin: 0;
+}
+
+@media (max-width: 28rem) {
+  .resume-carousel-figure-pair {
+    /* Keep image on the left, even on narrow screens */
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 0.6rem;
+  }
+
+  .resume-carousel-figure {
+    width: 6.75rem;
+    max-width: none;
+    align-self: flex-start;
+    padding: 0.25rem;
+  }
+}
+
+/* Mobile: keep tables as tables; allow horizontal pan inside the carousel. */
+@media (max-width: 40rem) {
+  .resume-carousel-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .resume-carousel-table {
+    table-layout: auto;
+    font-size: 0.84em;
+  }
+
+  .resume-carousel-table th,
+  .resume-carousel-table td {
+    padding: 0.28rem 0.42rem;
+  }
+}
+
+/* Mobile modal: Education tables should favor the Courses column. */
+@media (max-width: 767px) {
+  html.resume-web-modal-open [data-section="education"] .resume-carousel-table {
+    table-layout: fixed;
+    width: 100%;
+  }
+
+  html.resume-web-modal-open [data-section="education"] .resume-carousel-table thead th:first-child,
+  html.resume-web-modal-open [data-section="education"] .resume-carousel-table tbody th[scope="row"] {
+    width: 8.75rem;
+    max-width: 8.75rem;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+}
+
+@media (max-width: 767px) {
+  html.resume-web-modal-open .resume-section--web-active .resume-section-web:not([hidden]) {
+    position: fixed;
+    z-index: 60;
+    inset: max(0.5rem, env(safe-area-inset-top, 0px))
+      max(0.5rem, env(safe-area-inset-right, 0px))
+      max(0.5rem, env(safe-area-inset-bottom, 0px))
+      max(0.5rem, env(safe-area-inset-left, 0px));
+    max-height: 600px;
+    margin: auto 0;
+    overflow: hidden;
+    -webkit-overflow-scrolling: touch;
+    background: color-mix(in srgb, var(--page-backdrop) 55%, transparent);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--paper-border);
+    border-radius: calc(var(--radius) + 2px);
+    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.25);
+    padding: 0.25rem;
+  }
+
+  html.resume-web-modal-open .resume-section--web-active .resume-carousel {
+    margin-top: 0;
+    border: none;
+    box-shadow: none;
+    background: var(--surface);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  html.resume-web-modal-open .resume-carousel-viewport {
+    flex: 1 1 auto;
+    min-height: 0;
+    height: auto;
+    overflow: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Mobile modal: keep figure left, vertically centered. */
+  html.resume-web-modal-open .resume-carousel-figure-pair {
+    align-items: center;
+  }
+
+  html.resume-web-modal-open .resume-carousel-figure {
+    align-self: center;
+  }
+}
+
+.resume-carousel-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  margin-top: 0.55rem;
+  flex-wrap: wrap;
+}
+
+/* Secondary: circular prev/next (~40px touch target) */
+.resume-carousel-prev,
+.resume-carousel-next {
+  -webkit-appearance: none;
+  appearance: none;
+  box-sizing: border-box;
+  margin: 0;
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+  padding: 0;
+  font: inherit;
+  color: var(--accent);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.resume-carousel-prev:hover,
+.resume-carousel-next:hover {
+  background: var(--accent-muted);
+  border-color: var(--border-strong);
+  color: var(--accent-hover);
+}
+
+.resume-carousel-nav-icon {
+  display: block;
+  font-size: 1.2rem;
+  font-weight: 600;
+  line-height: 1;
+  margin-top: -0.06em;
+  pointer-events: none;
+}
+
+.resume-carousel-dots {
+  display: flex;
+  gap: 0.35rem;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.5rem;
+  padding: 0 0.25rem;
+}
+
+/* Dash / pip indicators (not numeric tabs) */
+.resume-carousel-dot {
+  -webkit-appearance: none;
+  appearance: none;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+  margin: 0;
+  padding: 0;
+  font: inherit;
+  font-size: 0;
+  line-height: 0;
+  color: inherit;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.resume-carousel-dot::after {
+  content: "";
+  display: block;
+  width: 1.4rem;
+  height: 0.22rem;
+  border-radius: var(--radius-pill);
+  background: var(--border-strong);
+  opacity: 0.55;
+  transition:
+    width 0.15s ease,
+    background 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.resume-carousel-dot:hover::after {
+  opacity: 0.85;
+}
+
+.resume-carousel-dot--current::after {
+  width: 1.85rem;
+  background: var(--accent);
+  opacity: 1;
+}
+
+.resume-carousel-dot:focus-visible,
+.resume-carousel-prev:focus-visible,
+.resume-carousel-next:focus-visible,
+.resume-carousel-close:focus-visible,
+.resume-section-expand:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.resume-carousel-dot:focus-visible {
+  background: var(--accent-muted);
+}
+
+/* Tertiary: link-like “Back to resume” */
+.resume-carousel-close {
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 0.45rem 0.35rem;
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 0.2em;
+  background: transparent;
+  border: none;
+  border-top: 1px solid var(--border);
+  border-radius: 0;
+  cursor: pointer;
+  transition:
+    color 0.15s ease,
+    text-decoration-color 0.15s ease;
+}
+
+.resume-carousel-close:hover {
+  color: var(--accent);
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+}
+
+/* Default build replaces portfolio/writings body with this; use build.py --no-under-construction for full content */
+.site-under-construction {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+}
+
+.site-under-construction-img {
+  max-width: min(100%, 36rem);
+  height: auto;
+  vertical-align: middle;
+}
+

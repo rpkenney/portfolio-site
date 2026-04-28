@@ -484,9 +484,32 @@ def copy_static_tree(static_root: Path, out_dir: Path) -> None:
     for path in static_root.rglob("*"):
         if path.is_file():
             rel = path.relative_to(static_root)
+            # CSS is bundled separately (see `build_css_bundle()`).
+            if rel.parts and rel.parts[0] == "css":
+                continue
             dest = out_dir / rel
             dest.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(path, dest)
+
+
+def build_css_bundle(static_root: Path, out_dir: Path) -> None:
+    """Bundle CSS sources from `static/css/` into `dist/site.css`."""
+
+    src_dir = static_root / "css"
+    if not src_dir.is_dir():
+        raise FileNotFoundError(f"missing css sources dir: {src_dir}")
+
+    order = [
+        src_dir / "00_tokens.css",
+        src_dir / "01_base_layout.css",
+        src_dir / "02_resume.css",
+        src_dir / "03_carousel.css",
+        src_dir / "04_writings_print.css",
+    ]
+    parts: list[str] = []
+    for p in order:
+        parts.append(p.read_text())
+    (out_dir / "site.css").write_text("\n".join(s.rstrip() for s in parts).rstrip() + "\n")
 
 
 def nav_for_page(page: str) -> dict[str, str]:
@@ -588,6 +611,7 @@ def main() -> None:
 
     out_dir = args.output
     out_dir.mkdir(parents=True, exist_ok=True)
+    build_css_bundle(root / "static", out_dir)
 
     css0, js0 = asset_hrefs(0)
     resume_ctx = {
