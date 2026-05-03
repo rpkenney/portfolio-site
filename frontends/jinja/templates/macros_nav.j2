@@ -1,0 +1,32 @@
+{# Global nav — hrefs from nav_for (Python); labels from discovered routes. #}
+
+{% macro site_nav(nav, owner_name) -%}
+{% set name_parts = owner_name.split() %}
+{% set initials = (name_parts[0][0] if name_parts else "") ~ (name_parts[-1][0] if name_parts|length > 1 else "") %}
+{% set home_href = namespace(value="index.html") %}
+{% for item in nav.links %}
+  {% if item.nav_key == "home" %}
+    {% set home_href.value = item.href %}
+  {% endif %}
+{% endfor %}
+<nav class="site-nav" aria-label="Site" data-site-nav>
+  <a
+    href="{{ home_href.value }}"
+    class="site-nav-brand{% if nav.current_page == 'home' %} site-nav-brand--current{% endif %}"
+  >
+    <span class="site-nav-brand-mark" aria-hidden="true">{{ initials | upper }}</span>
+    <span class="site-nav-brand-name">{{ owner_name }}</span>
+  </a>
+  <ul class="site-nav-list" id="site-nav-list">
+    {% for item in nav.links %}
+    <li>
+      <a
+        href="{{ item.href }}"
+        class="site-nav-link{% if nav.current_page == item.nav_key or nav.current_page in item.current_aliases %} site-nav-link--current{% endif %}"
+        {% if nav.current_page == item.nav_key %}aria-current="page"{% endif %}
+      >{{ item.label }}</a>
+    </li>
+    {% endfor %}
+  </ul>
+</nav>
+{%- endmacro %}

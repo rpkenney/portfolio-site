@@ -1,0 +1,19 @@
+# Portfolio projects (separate from content/data/resume.yaml). README embed is a later step.
+projects:
+  - id: example-hello-world
+    title: Example — Hello World
+    overview: >-
+      Placeholder entry demonstrating the schema. Replace with real projects or
+      clear the list when you are ready.
+    repo: octocat/Hello-World
+    ref: master
+    readme_path: README.md
+
+  - id: example-spoon-knife
+    title: Example — Spoon-Knife
+    overview: >-
+      Second stub so the portfolio layout shows two projects side by side in the
+      mental model: distinct titles, links, and overview copy.
+    repo: octocat/Spoon-Knife
+    ref: main
+    readme_path: README.md

@@ -1,0 +1,74 @@
+{% import "carousel/list_body.j2" as lb %}
+{% macro web_carousel_list(section, web) -%}
+{% if web %}
+<div
+  id="{{ section.id }}-web"
+  class="resume-section-web resume-web-only"
+  hidden
+  data-resume-carousel
+  data-section="{{ section.id }}"
+  {% if web.aria_label %}aria-label="{{ web.aria_label | e }}"{% endif %}
+  role="region"
+>
+  <div class="resume-carousel">
+    <div class="resume-carousel-viewport">
+      <div class="resume-carousel-track" role="list">
+        {% for slide in web.slides_normalized %}
+        <section
+          id="{{ section.id }}-slide-{{ slide.id }}"
+          role="listitem"
+          class="resume-carousel-slide resume-carousel-slide--list{% if loop.first %} resume-carousel-slide--current{% endif %}"
+          {% if not loop.first %}hidden aria-hidden="true"{% else %}aria-hidden="false"{% endif %}
+          tabindex="-1"
+        >
+          {% if slide.title %}
+          <h3 class="resume-carousel-slide-title">{{ slide.title }}</h3>
+          {% endif %}
+          {% if slide.has_image %}
+          <div class="resume-carousel-figure-pair">
+            <figure
+              class="resume-carousel-figure resume-carousel-figure--list resume-carousel-figure--{{ slide.id | e }}"
+              {% if slide.figure_style %}style="{{ slide.figure_style | e }}"{% endif %}
+            >
+              <img src="{{ slide.image | e }}" alt="{{ slide.image_alt | e }}" loading="lazy" decoding="async" />
+            </figure>
+            <div class="resume-carousel-figure-text resume-carousel-slide-list-body">
+              {{ lb.carousel_list_body(slide) }}
+            </div>
+          </div>
+          {% else %}
+          <div class="resume-carousel-slide-list-body">
+            {{ lb.carousel_list_body(slide) }}
+          </div>
+          {% endif %}
+        </section>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="resume-carousel-toolbar" role="toolbar" aria-label="Carousel controls">
+      <button type="button" class="resume-carousel-prev" aria-label="Previous slide">
+        <span class="resume-carousel-nav-icon" aria-hidden="true">‹</span>
+      </button>
+      <div class="resume-carousel-dots" role="tablist" aria-label="Slides">
+        {% for slide in web.slides_normalized %}
+        <button
+          type="button"
+          role="tab"
+          class="resume-carousel-dot{% if loop.first %} resume-carousel-dot--current{% endif %}"
+          tabindex="{% if loop.first %}0{% else %}-1{% endif %}"
+          aria-selected="{{ 'true' if loop.first else 'false' }}"
+          aria-label="Slide {{ loop.index }} of {{ web.slides_normalized|length }}"
+          id="{{ section.id }}-tab-{{ slide.id }}"
+          aria-controls="{{ section.id }}-slide-{{ slide.id }}"
+        ></button>
+        {% endfor %}
+      </div>
+      <button type="button" class="resume-carousel-next" aria-label="Next slide">
+        <span class="resume-carousel-nav-icon" aria-hidden="true">›</span>
+      </button>
+    </div>
+    <button type="button" class="resume-carousel-close" data-resume-carousel-close>Back to resume</button>
+  </div>
+</div>
+{% endif %}
+{%- endmacro %}

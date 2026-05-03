@@ -1,0 +1,5 @@
+# Optional: HTML API docs from docstrings → docs-html/index.html
+#   pdoc -o docs-html ingest frontends.jinja.sections.resume
+# Wider surface (nav, routes, cli):   pdoc -o docs-html ingest frontends.jinja
+-r requirements.txt
+pdoc>=14.5.0

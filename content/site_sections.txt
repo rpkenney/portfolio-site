@@ -1,0 +1,4 @@
+# One dotted import per line (order = load / merge order).
+frontends.jinja.sections.resume
+frontends.jinja.sections.portfolio
+frontends.jinja.sections.writings

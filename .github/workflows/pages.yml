@@ -29,7 +29,7 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Build site
-        run: python build.py
+        run: python build.py jinja --sections-file content/site_sections.txt
 
       - uses: actions/upload-pages-artifact@v3
         with:

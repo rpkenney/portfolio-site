@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block doc_title %}{{ page_title }} — {{ site_owner_name }}{% endblock %}</title>
+  <link rel="stylesheet" href="{{ css_href }}" />
+</head>
+<body>
+<canvas id="site-backdrop" class="site-backdrop" aria-hidden="true"></canvas>
+{% import "macros_nav.j2" as nav_macro %}
+  <div class="site">
+    {{ nav_macro.site_nav(nav, site_owner_name) }}
+    <div class="site-content{% if content_frame %} site-content--framed{% endif %}">
+      {% if content_frame %}<div class="content-frame" data-content-frame><div class="content-frame-stage" data-content-frame-stage>{% endif %}
+      {% block main %}{% endblock %}
+      {% if content_frame %}</div></div>{% endif %}
+    </div>
+  </div>
+  <script type="application/json" id="site-ui-config">{{ site_ui_config_json | safe }}</script>
+  {% if content_frame %}
+  <script src="{{ js_content_frame_href }}" defer></script>
+  {% endif %}
+  <script src="{{ js_carousel_href }}" defer></script>
+  <script src="{{ js_langton_ant_href }}" defer></script>
+</body>
+</html>

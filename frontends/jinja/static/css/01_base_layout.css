@@ -1,0 +1,266 @@
+/* Document does not scroll — only `.site-content` does (site shell below). */
+html {
+  height: 100%;
+  overflow: hidden;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* Page chrome — body carries atmosphere; résumé lives on white “paper” (tokens: page-backdrop, paper). */
+body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  font-family: system-ui, sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.35;
+  color: var(--text);
+  background-color: var(--page-backdrop);
+  background-image: linear-gradient(
+    165deg,
+    var(--page-backdrop-highlight) 0%,
+    var(--page-backdrop-mid) 42%,
+    var(--page-backdrop) 100%
+  );
+  padding: max(0.75rem, env(safe-area-inset-top))
+    max(0.85rem, env(safe-area-inset-right))
+    max(1.25rem, env(safe-area-inset-bottom))
+    max(0.85rem, env(safe-area-inset-left));
+  box-sizing: border-box;
+}
+
+/* Site shell: nav + scrollable main column (no document scroll) */
+.site-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-backdrop {
+    display: none;
+  }
+}
+
+@media (max-width: __UI_RESUME_MODAL_MAX__px) {
+  .site-backdrop {
+    display: none;
+  }
+}
+
+.site {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto minmax(0, 1fr);
+  width: 100%;
+  height: 100%;
+  max-height: 100%;
+  min-height: 0;
+  margin: 0 auto;
+  align-items: stretch;
+  gap: 0.5rem 0;
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.site-content {
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overflow-anchor: none;
+  /* Thinner, quieter rail than the default OS scrollbar on the main column. */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(120, 113, 108, 0.45) transparent;
+}
+
+.site-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.site-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.site-content::-webkit-scrollbar-thumb {
+  background: rgba(120, 113, 108, 0.4);
+  border-radius: 999px;
+}
+
+.site-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(87, 83, 78, 0.5);
+}
+
+.site-nav {
+  position: relative;
+  z-index: 25;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.85rem 1.25rem;
+  width: 100%;
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: 0.15rem 0 0.55rem;
+  padding-top: max(0.15rem, env(safe-area-inset-top, 0px));
+  border-bottom: 1px solid var(--border);
+}
+
+.site-nav-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-width: 0;
+  color: var(--text);
+  text-decoration: none;
+  flex-shrink: 0;
+  transition: color 0.15s ease;
+}
+
+.site-nav-brand:hover {
+  color: var(--accent);
+}
+
+.site-nav-brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  line-height: 1;
+  color: var(--surface);
+  background: linear-gradient(145deg, var(--accent) 0%, var(--accent-hover) 100%);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.12) inset;
+}
+
+.site-nav-brand-name {
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.site-nav-brand--current .site-nav-brand-name {
+  color: var(--accent);
+}
+
+.site-nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.15rem 0.35rem;
+  min-width: 0;
+}
+
+.site-nav-list > li {
+  display: flex;
+  align-items: center;
+}
+
+.site-nav-list > li + li::before {
+  content: "·";
+  margin-right: 0.35rem;
+  color: var(--border-strong);
+  font-weight: 700;
+  user-select: none;
+}
+
+.site-nav-link {
+  display: block;
+  padding: 0.18rem 0.1rem;
+  font-size: 0.72rem;
+  font-weight: 650;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  text-decoration: none;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  transition:
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.site-nav-link:hover {
+  color: var(--accent);
+}
+
+.site-nav-link--current {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+.site-nav-brand:focus-visible,
+.site-nav-link:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+  border-radius: var(--radius-sm);
+}
+
+@media (min-width: __UI_SITE_NAV_DESKTOP_MIN__px) {
+  .site-nav-link {
+    font-size: 0.76rem;
+    padding: 0.22rem 0.12rem;
+  }
+
+  .site-nav-brand-name {
+    font-size: 0.98rem;
+  }
+}
+
+@media (max-width: __UI_SITE_NAV_MAX__px) {
+  body {
+    padding:
+      max(0.5rem, env(safe-area-inset-top))
+      max(0.55rem, env(safe-area-inset-right))
+      max(0.85rem, env(safe-area-inset-bottom))
+      max(0.55rem, env(safe-area-inset-left));
+  }
+
+  .site {
+    gap: 0.35rem 0;
+  }
+
+  .site-nav {
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 0.45rem 0.75rem;
+    padding-bottom: 0.45rem;
+  }
+
+  .site-nav-list {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+.site-placeholder-section {
+  margin-top: 1rem;
+}
+
+.site-placeholder-section h2 {
+  font-size: 1rem;
+}
+
+.site-placeholder-section p {
+  margin: 0.35rem 0 0;
+  line-height: 1.45;
+}
+

@@ -1,0 +1,35 @@
+{% macro carousel_list_body(slide) -%}
+  {% if slide.intro %}
+  <p class="resume-carousel-slide-intro">{{ slide.intro }}</p>
+  {% endif %}
+  {% if slide.body.mode == "table" %}
+  <div class="resume-carousel-table-wrap">
+    <table class="resume-carousel-table">
+      <thead>
+        <tr>
+          {% for h in slide.body.headers %}
+          <th scope="col">{{ h | e }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in slide.body.rows %}
+        <tr>
+          <th scope="row">{{ row[0] | e }}</th>
+          {% for cell in row[1:] %}
+          <td>{{ cell | e }}</td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% elif slide.body.mode == "deflist" %}
+  <dl class="resume-carousel-deflist">
+    {% for pair in slide.body.pairs %}
+    <dt>{{ pair.name }}</dt>
+    <dd>{{ pair.description }}</dd>
+    {% endfor %}
+  </dl>
+  {% endif %}
+{%- endmacro %}

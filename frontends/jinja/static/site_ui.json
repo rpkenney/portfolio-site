@@ -1,0 +1,15 @@
+{
+    "resumeModalMaxWidthPx": 767,
+    "siteNavMaxWidthPx": 1149,
+    "contentFrameLogicalWidthPx": 768,
+    "contentFrameMaxScale": 8,
+    "contentFrameFitGutterPx": 48,
+    "carouselOpenHeightMs": 350,
+    "carouselCloseHeightMs": 500,
+    "viewportBottomMarginPx": 20,
+    "heightTransitionEndFallbackMs": 450,
+    "carouselCloseTransitionEndFallbackMs": 600,
+    "langtonAntCellPx": 24,
+    "langtonAntStepMs": 120,
+    "langtonAntInitialFill": 0.3
+}

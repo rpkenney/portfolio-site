@@ -1,7 +1,15 @@
 .venv/*
 dist/*
+docs-html/*
 
 # Local-only notes (not committed)
 .private/
 
-__pycache__/*
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+.python_cache/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/

@@ -1,0 +1,66 @@
+/* Zoomable résumé viewport — only when ``.site-content--framed`` is present (home page). */
+
+.site-content--framed {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  background: transparent;
+}
+
+.content-frame {
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+  position: relative;
+  touch-action: none;
+  border-radius: var(--radius-lg);
+  background: transparent;
+}
+
+.content-frame.is-panning {
+  cursor: grabbing;
+}
+
+.content-frame-stage {
+  width: __UI_CONTENT_FRAME_LOGICAL_WIDTH__px;
+  transform-origin: 0 0;
+  will-change: transform;
+  user-select: text;
+  -webkit-user-select: text;
+}
+
+.content-frame-stage main.resume {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+/* Carousels need an untransformed stage for layout + fixed overlays. */
+html.content-frame-suspended .content-frame {
+  overflow-y: auto;
+  touch-action: auto;
+}
+
+html.content-frame-suspended .content-frame-stage {
+  transform: none !important;
+  width: 100%;
+  max-width: __UI_CONTENT_FRAME_LOGICAL_WIDTH__px;
+  margin: 0 auto;
+}
+
+html.content-frame-suspended .content-frame-stage main.resume {
+  max-width: none;
+}
+
+/* Mobile modal: freeze zoom/pan transform in place; block interaction with résumé behind. */
+html.content-frame-modal-open .content-frame {
+  pointer-events: none;
+  touch-action: none;
+}
+
+html.content-frame-modal-open .content-frame-stage {
+  pointer-events: none;
+}

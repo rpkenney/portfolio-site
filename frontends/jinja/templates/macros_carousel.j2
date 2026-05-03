@@ -1,0 +1,31 @@
+{# Web-only résumé carousels; partials under ``templates/carousel/``. #}
+
+{% import "carousel/web_list.j2" as wl %}
+{% import "carousel/web_figure.j2" as wf %}
+
+{% macro section_head(section, web) -%}
+<header
+  class="resume-section-head{% if web %} resume-section-head--expandable{% endif %}"
+  {% if web %}
+  data-resume-carousel-expand
+  role="button"
+  tabindex="0"
+  aria-expanded="false"
+  aria-controls="{{ section.id }}-web"
+  aria-label="Show more about {{ section.heading }}"
+  {% endif %}
+>
+  <h2 id="{{ section.heading_id }}">{{ section.heading }}</h2>
+  {% if web %}
+  <span class="resume-section-head-chevron resume-web-only" aria-hidden="true"></span>
+  {% endif %}
+</header>
+{%- endmacro %}
+
+{% macro web_carousel_list(section, web) -%}
+{{- wl.web_carousel_list(section, web) -}}
+{%- endmacro %}
+
+{% macro web_carousel_figure(section, web) -%}
+{{- wf.web_carousel_figure(section, web) -}}
+{%- endmacro %}
