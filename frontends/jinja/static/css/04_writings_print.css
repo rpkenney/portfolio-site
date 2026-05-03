@@ -1,0 +1,170 @@
+/* Writings: Markdown-derived prose in the browser.
+   Print rules (``@media print`` below) also affect the résumé home page when printing:
+   - Flatten `.site` to a normal block; drop nav chrome.
+   - Hide `.site-nav` (global menu).
+   - Strip “paper” shadow/border from `main.resume` for a clean sheet.
+   - Hide web-only carousels: `.resume-web-only`, `.resume-section-web` (print shows default résumé lists only). */
+
+/* Writings — prose block (Markdown → HTML fragment) */
+.writing-back {
+  margin: 0.35rem 0 0;
+  font-size: 0.92rem;
+}
+
+.writing-back a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.writing-back a:hover {
+  text-decoration: underline;
+}
+
+.writings-list-items {
+  margin: 0.5rem 0 0;
+  padding-left: 1.2rem;
+}
+
+.writings-list-items li {
+  margin: 0.45rem 0;
+}
+
+.writings-list-path {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.writings-list-path code {
+  font-size: 0.88em;
+}
+
+.writing-body {
+  margin-top: 1rem;
+  max-width: 42rem;
+}
+
+.writing-body > *:first-child {
+  margin-top: 0;
+}
+
+.writing-body h2 {
+  font-size: 1.15rem;
+  margin: 1.25rem 0 0.5rem;
+  font-weight: 650;
+  color: var(--text);
+}
+
+.writing-body h3 {
+  font-size: 1.02rem;
+  margin: 1rem 0 0.4rem;
+  font-weight: 600;
+}
+
+.writing-body p,
+.writing-body ul,
+.writing-body ol {
+  margin: 0.5rem 0;
+}
+
+.writing-body ul,
+.writing-body ol {
+  padding-left: 1.35rem;
+}
+
+.writing-body li {
+  margin: 0.25rem 0;
+}
+
+.writing-body a {
+  color: var(--accent);
+}
+
+.writing-body pre {
+  margin: 0.65rem 0;
+  padding: 0.65rem 0.75rem;
+  overflow-x: auto;
+  font-size: 0.84rem;
+  line-height: 1.4;
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.writing-body code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.88em;
+}
+
+.writing-body :not(pre) > code {
+  padding: 0.12em 0.35em;
+  background: var(--surface-elevated);
+  border-radius: var(--radius-sm);
+}
+
+.writing-body table {
+  border-collapse: collapse;
+  margin: 0.65rem 0;
+  font-size: 0.92rem;
+}
+
+.writing-body th,
+.writing-body td {
+  border: 1px solid var(--border);
+  padding: 0.35rem 0.55rem;
+  text-align: left;
+}
+
+.writing-body th {
+  background: var(--surface-elevated);
+  font-weight: 600;
+}
+
+@media print {
+  html {
+    height: auto;
+    overflow: visible;
+  }
+
+  body {
+    min-height: 0;
+    height: auto;
+    overflow: visible;
+    background: #fff !important;
+    background-image: none !important;
+    padding: 0;
+  }
+
+  .site {
+    display: block;
+    max-width: none;
+    height: auto;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .site-nav {
+    display: none !important;
+  }
+
+  .site-content {
+    overflow: visible !important;
+    padding-left: 0 !important;
+  }
+
+  main.resume {
+    border: none !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 0.35rem 0.8rem 0.7rem;
+    max-width: none;
+  }
+
+  .resume-web-only,
+  .resume-section-web {
+    display: none !important;
+  }
+}
+

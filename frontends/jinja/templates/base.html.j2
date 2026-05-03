@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block doc_title %}{{ page_title }} — {{ site_owner_name }}{% endblock %}</title>
+  <link rel="stylesheet" href="{{ css_href }}" />
+</head>
+<body>
+{% import "macros_nav.j2" as nav_macro %}
+  <div class="site">
+    {{ nav_macro.site_nav(nav) }}
+    <div class="site-content">
+      {% block main %}{% endblock %}
+    </div>
+  </div>
+  <script type="application/json" id="site-ui-config">{{ site_ui_config_json | safe }}</script>
+  <script src="{{ js_nav_href }}" defer></script>
+  <script src="{{ js_carousel_href }}" defer></script>
+</body>
+</html>

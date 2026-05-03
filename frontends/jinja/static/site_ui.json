@@ -1,0 +1,9 @@
+{
+    "resumeModalMaxWidthPx": 767,
+    "siteNavMaxWidthPx": 1149,
+    "carouselOpenHeightMs": 350,
+    "carouselCloseHeightMs": 500,
+    "viewportBottomMarginPx": 20,
+    "heightTransitionEndFallbackMs": 450,
+    "carouselCloseTransitionEndFallbackMs": 600
+}

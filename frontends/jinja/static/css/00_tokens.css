@@ -1,0 +1,29 @@
+/* Design tokens — chrome: surfaces, controls, focus */
+:root {
+  /* Ink + stone neutrals (warm, less “flat gray”) */
+  --text: #141210;
+  --text-muted: #5c5855;
+  --border: #e6e3df;
+  --border-strong: #c9c4be;
+  --surface: #ffffff;
+  --surface-elevated: #faf9f7;
+  --surface-control: #f3f1ee;
+  /* Accent: deep blue — distinct from neutrals, not green */
+  --accent: #1e4a8c;
+  --accent-hover: #163a70;
+  --accent-muted: rgba(30, 74, 140, 0.14);
+  /* Default corners: modest; use --radius-lg for controls; pill reserved for rare full pills */
+  --radius: 6px;
+  --radius-sm: 4px;
+  --radius-lg: 10px;
+  --radius-pill: 9999px;
+  --shadow-sm: 0 1px 2px rgba(20, 18, 16, 0.05);
+  --shadow-md: 0 4px 16px rgba(20, 18, 16, 0.07);
+  --focus-ring: 0 0 0 2px var(--surface), 0 0 0 4px var(--accent);
+  /* Page vs. paper (backdrop + card) */
+  --page-backdrop: #e3e0dc;
+  --page-backdrop-mid: #ebe8e4;
+  --page-backdrop-highlight: #f3f1ed;
+  --paper-shadow: 0 10px 36px rgba(20, 18, 16, 0.08), 0 2px 8px rgba(20, 18, 16, 0.04);
+  --paper-border: rgba(90, 83, 78, 0.14);
+}
