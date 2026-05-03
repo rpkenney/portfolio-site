@@ -305,6 +305,12 @@ html.resume-carousel-motion-ok .resume-carousel-viewport {
 }
 
 @media (max-width: 767px) {
+  /* Hide the site nav while a carousel is open so the menu button doesn't peek
+     above the centered modal card on tall phones. */
+  html.resume-web-modal-open .site-nav {
+    display: none;
+  }
+
   html.resume-web-modal-open .resume-section--web-active .resume-section-web:not([hidden]) {
     position: fixed;
     z-index: 60;
